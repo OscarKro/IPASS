@@ -1,13 +1,8 @@
 #include "hwlib.hpp"
+#include "bmpoled.hpp"
 
-int main( void ){	  
-   
-   auto scl = hwlib::target::pin_oc( hwlib::target::pins::scl );
-   auto sda = hwlib::target::pin_oc( hwlib::target::pins::sda );
-   
-   auto i2c_bus = hwlib::i2c_bus_bit_banged_scl_sda( scl,sda );
-   
-   auto display = hwlib::glcd_oled( i2c_bus, 0x3c );  
-     
-   hwlib::graphics_random_circles( display, 5 );
+int main(void)
+{
+    bmpoled oleddisplay(hwlib::target::pins::scl, hwlib::target::pins::sda);
+    oleddisplay.drawCircles();
 }
