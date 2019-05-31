@@ -2,7 +2,9 @@
 
 BMP280::BMP280(hwlib::pin_oc& scl, hwlib::pin_oc& sda): bus(scl,sda) {}
 
-void BMP280::select()
+int8_t BMP280::readTemp()
 {
-  bus.write(adress).write(0);//schrijf ik hier het adres met een 1 erachteraan om te schrijven? waarom kan dit niet? Wouter vragen!
+  bus.write(adress);
+  int8_t x = 10; //placeholder
+  return x;
 }
