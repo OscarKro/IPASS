@@ -9,10 +9,10 @@
 #############################################################################
 
 # source files in this project (main.cpp is automatically assumed)
-SOURCES := bmpoled.cpp
+SOURCES := oled.cpp BMP280.cpp
 
 # header files in this project
-HEADERS := bmpoled.hpp
+HEADERS := oled.hpp BMP280.hpp
 
 # other places to look for files for this project
 SEARCH  := 
