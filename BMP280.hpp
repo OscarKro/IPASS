@@ -7,10 +7,9 @@ class BMP280
 private:
 hwlib::i2c_bus_bit_banged_scl_sda bus;
 const uint8_t adress = 0x76;
-uint8_t adressTemp = 0xFB;
 
 public:
-BMP280(hwlib::pin_oc& scl, hwlib::pin_oc& sda);
-int8_t readTemp();
+BMP280(hwlib::i2c_bus_bit_banged_scl_sda bus);
+void start();
 };
 #endif //BMP280_HPP

@@ -11,7 +11,7 @@ private:
     hwlib::terminal_from window;
 
 public:
-    oled(hwlib::target::pin_oc sclOled, hwlib::target::pin_oc sdaOled);
+    oled(hwlib::i2c_bus_bit_banged_scl_sda bus);
     void drawTemp(const int x);
 };
 

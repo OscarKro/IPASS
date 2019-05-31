@@ -1,10 +1,8 @@
 #include "BMP280.hpp"
 
-BMP280::BMP280(hwlib::pin_oc& scl, hwlib::pin_oc& sda): bus(scl,sda) {}
+BMP280::BMP280(hwlib::i2c_bus_bit_banged_scl_sda bus): bus(bus) {}
 
-int8_t BMP280::readTemp()
+void BMP280::start()
 {
   bus.write(adress);
-  int8_t x = 10; //placeholder
-  return x;
 }
