@@ -10,6 +10,7 @@ int main(void)
     oled oleddisplay(mainBus);
     hwlib::wait_ms(5);
     BMP280 sensor(mainBus);
+    sensor.start();
     int x = 10;
     oleddisplay.drawTemp(x);
 }
