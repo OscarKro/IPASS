@@ -6,10 +6,10 @@ class BMP280
 {
 private:
 hwlib::i2c_bus_bit_banged_scl_sda bus;
-uint_fast8_t adress = 0b1110110;
+int adress = 0b1110110;
 
 public:
 BMP280(hwlib::pin_oc& scl, hwlib::pin_oc& sda);
-//void select();
+void select();
 };
 #endif //BMP280_HPP
