@@ -13,8 +13,11 @@ uint8_t BMP280::readTemp()
   selectRegister(adresses::tempAdress1);
   uint8_t msb = bus.read(adresses::i2cAdress).read_byte();
   uint8_t lsb = bus.read(adresses::i2cAdress).read_byte();
-  uint16_t total = msb << 8;
+  uint8_t xlsb = bus.read(adresses::tempAdress3).read_byte();
+  uint32_t total = msb << 8;
   total |= lsb;
+  total <<= 8;
+  total |= xlsb;
   hwlib::cout << "waarde totaal: " << total;
   return total;
 }
