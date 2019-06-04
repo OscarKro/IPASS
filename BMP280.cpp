@@ -18,7 +18,7 @@ uint8_t BMP280::readTemp()
   total |= lsb;
   total <<= 8;
   total |= xlsb;
-  hwlib::cout << "waarde totaal: " << total;
+  hwlib::cout << "waarde totaal: " << hwlib::bin << total;
   return total;
 }
 
