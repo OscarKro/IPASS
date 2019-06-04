@@ -7,7 +7,7 @@ private:
 
     hwlib::i2c_bus &bus;
 
-    enum class adress : const uint8_t
+    enum adresses : const uint8_t
     {
         i2cAdress = 0x76, //0b1110110
         statusAdress = 0xF3,
