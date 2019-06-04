@@ -4,15 +4,15 @@ BMP280::BMP280(hwlib::i2c_bus &bus) : bus(bus) {}
 
 void BMP280::selectRegister(const uint8_t adress)
 {
-  auto transaction = bus.write(i2cAdress);
+  auto transaction = bus.write(adress::i2cAdress);
   transaction.write(adress);
 }
 
 uint8_t BMP280::readTemp()
 {
-  selectRegister(tempAdress1);
-  uint8_t msb = bus.read(i2cAdress).read_byte();
-  uint8_t lsb = bus.read(i2cAdress).read_byte();
+  selectRegister(adress::tempAdress1);
+  uint8_t msb = bus.read(adress::i2cAdress).read_byte();
+  uint8_t lsb = bus.read(adress::i2cAdress).read_byte();
   uint16_t total = msb << 8;
   total |= lsb;
   hwlib::cout << "waarde totaal: " << total;
@@ -21,16 +21,16 @@ uint8_t BMP280::readTemp()
 
 uint8_t BMP280::readId()
 {
-  selectRegister(idAdress);
-  uint8_t id = bus.read(i2cAdress).read_byte();
+  selectRegister(adress::idAdress);
+  uint8_t id = bus.read(adress::i2cAdress).read_byte();
   hwlib::cout << hwlib::hex << id << hwlib::endl;
   return id;
 }
 
 void BMP280::setMode(char ch)
 {
-  auto transaction = bus.write(i2cAdress);
-  transaction.write(modeAdress);
+  auto transaction = bus.write(adress::i2cAdress);
+  transaction.write(adress::modeAdress);
   uint8_t mode = 0b00000000;
   if (ch == 's')
   {
