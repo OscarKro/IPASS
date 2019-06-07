@@ -12,7 +12,7 @@ private:
 
 public:
     oled(hwlib::i2c_bus_bit_banged_scl_sda &bus);
-    void drawTemp(const uint32_t x);
+    void drawTemp(const int32_t x);
 };
 
 #endif //OLED_HPP

@@ -28,7 +28,7 @@ public:
     void selectRegister(const uint8_t adress);
     uint8_t readByte();
     void writeByte(const uint8_t adress, const uint8_t byte);
-    uint8_t readPTRegisters(uint8_t x);
+    int32_t *readPTRegisters();
     uint8_t readId();
     void setMode();
     void reset();

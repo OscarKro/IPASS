@@ -22,45 +22,39 @@ void BMP280::writeByte(const uint8_t adress, const uint8_t byte)
   transaction.~i2c_write_transaction();
 }
 
-uint8_t BMP280::readPTRegisters(uint8_t x)
+int32_t *BMP280::readPTRegisters()
 {
   //omdat het hele spul wordt uitgelezen in 20 bit format, en bij xlsb de rechtse 4 mee doen, en de rest niet.
   //wordt xlsb 4 keer naar rechts geshift en dan meegenomen in het totaal;
   selectRegister(adresses::pressureAdress1);
-  uint8_t msbPress = readByte();
-  uint8_t lsbPress = readByte();
-  uint8_t xlsbPress = readByte();
-  uint8_t msbTemp = readByte();
-  uint8_t lsbTemp = readByte();
-  uint8_t xlsbTemp = readByte();
+  auto transaction = bus.read(adresses::i2cAdress);
+  int8_t msbPress = transaction.read_byte();
+  int8_t lsbPress = transaction.read_byte();
+  int8_t xlsbPress = transaction.read_byte();
+  int8_t msbTemp = transaction.read_byte();
+  int8_t lsbTemp = transaction.read_byte();
+  int8_t xlsbTemp = transaction.read_byte();
+  transaction.~i2c_read_transaction();
 
-  uint32_t totalPress = msbPress << 8;
+  int32_t totalPress = 0;
+  totalPress |= msbPress;
+  totalPress <<= 8;
   totalPress |= lsbPress;
   totalPress <<= 4;
   xlsbPress >>= 4;
   totalPress |= xlsbPress;
 
-  uint32_t totalTemp = msbTemp << 8;
+  int32_t totalTemp = 0;
+  totalTemp |= msbTemp;
+  totalTemp <<= 8;
   totalTemp |= lsbTemp;
   totalTemp <<= 4;
   xlsbTemp >>= 4;
-  totalPress |= xlsbTemp;
+  totalTemp |= xlsbTemp;
 
-  if (x == 0)
-  {
-    hwlib::cout << "pressure: " << hwlib::bin << totalPress << hwlib::endl;
-    return totalPress;
-  }
-  else if (x == 1)
-  {
-    hwlib::cout << "temperature: " << hwlib::bin << totalTemp << hwlib::endl;
-    return totalTemp;
-  }
-  else
-  {
-    hwlib::cout << "no good mode selected" << hwlib::endl;
-    return 1;
-  }
+  static int32_t total[2] = {totalPress, totalTemp};
+
+  return total;
 }
 
 uint8_t BMP280::readId()
@@ -74,9 +68,11 @@ uint8_t BMP280::readId()
 void BMP280::setMode()
 {
   //eerste 3 bits = temp, 2e 3 bits = pressure laatste 2 is mode.
-  uint8_t mode = 0b11110101; //temperature oversampeling = 16x, pressure oversampling = 16x, forced mode
+  uint8_t mode = 0b00100101; //temperature oversampeling = 1x, pressure oversampling = 1x, forced mode
+  uint8_t config = 0b00000000;
   //uint8_t config = 0b00000000;
   writeByte(adresses::ctrl_measAdress, mode);
+  writeByte(adresses::configAdress, config);
 }
 
 void BMP280::reset()
