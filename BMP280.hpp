@@ -4,14 +4,14 @@
 class BMP280
 {
 private:
-
     hwlib::i2c_bus &bus;
 
     enum adresses : const uint8_t
     {
+
         i2cAdress = 0x76, //0b1110110
         statusAdress = 0xF3,
-        modeAdress = 0xF4, //00 = sleep mode, 01 en 10 is forced mode 11 is normal mode;
+        ctrl_measAdress = 0xF4,
         configAdress = 0xF5,
         pressureAdress1 = 0xF7,
         pressureAdress2 = 0xF8,
@@ -23,11 +23,14 @@ private:
         idAdress = 0xD0
     };
 
-public : 
-BMP280(hwlib::i2c_bus &bus);
+public:
+    BMP280(hwlib::i2c_bus &bus);
     void selectRegister(const uint8_t adress);
-    uint8_t readTemp();
+    uint8_t readByte();
+    void writeByte(const uint8_t adress, const uint8_t byte);
+    uint8_t readPTRegisters(uint8_t x);
     uint8_t readId();
-    void setMode(char ch);
+    void setMode();
+    void reset();
 };
 #endif //BMP280_HPP

@@ -4,7 +4,8 @@
 
 namespace global
 {
-    uint8_t temp;
+    uint32_t temp;
+    uint32_t press;
 };
 
 int main(void)
@@ -15,9 +16,9 @@ int main(void)
     oled oleddisplay(mainBus);
     hwlib::wait_ms(10);
     BMP280 sensor(mainBus);
-    sensor.setMode('f');
-    sensor.readId();
+    sensor.setMode();
 
-    global::temp = sensor.readTemp();
+    global::temp = sensor.readPTRegisters(0);
+    global::press = sensor.readPTRegisters(1);
     oleddisplay.drawTemp(global::temp);
 }
