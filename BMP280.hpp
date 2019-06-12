@@ -11,16 +11,42 @@ private:
         resetAdress = 0xE0,
         idAdress = 0xD0,
         statusAdress = 0xF3,
-        ctrl_measAdress, //0xF4
-        configAdress, //0xF5
-        i2cAdress, //0XF6
-        pressureAdress1, //0xF7
-        pressureAdress2, //0XF8
-        pressureAdress3, //0xF9
-        tempAdress1, //0xFA
-        tempAdress2, //0xFB
-        tempAdress3 //0xFC
+        ctrl_measAdress,
+        configAdress,
+        i2cAdress,
+        pressureAdress1,
+        pressureAdress2,
+        pressureAdress3,
+        tempAdress1,
+        tempAdress2,
+        tempAdress3,
+
+        dig_t1Adress1 = 0x88, //unsigned short
+        dig_t1Adress2, 
+        dig_t2Adress1, //signed short
+        dig_t2Adress2,
+        dig_t3Adress1, //signed short
+        dig_t3Adress2,
+        dig_p1Adress1, //unsigned short
+        dig_p1Adress2,
+        dig_p2Adress1, //signed short
+        dig_p2Adress2,
+        dig_p3Adress1, //signed short
+        dig_p3Adress2,
+        dig_p4Adress1, //signed short
+        dig_p4Adress2,
+        dig_p5Adress1, //signed short
+        dig_p6Adress2,
+        dig_p7Adress1, //signed short
+        dig_p7Adress2,
+        dig_p8Adress1, //signed short
+        dig_p8Adress2,
+        dig_p9Adress1, //signed short
+        dig_p9Adress2,
+        reservedAdress1, //reserved, onleesbaar?
+        reservedAdress2
     };
+    
 
 public:
     BMP280(hwlib::i2c_bus &bus);
