@@ -9,7 +9,7 @@ void BMP280::selectRegister(const uint8_t adress)
 
 uint8_t BMP280::readSingleByte(const uint8_t adress)
 {
-  bus.write(adresses::i2cAdress).write(adress);
+  selectRegister(adress);
   return bus.read(adresses::i2cAdress).read_byte();
 }
 
@@ -20,11 +20,9 @@ void BMP280::writeSingleByte(const uint8_t adress, const uint8_t byte)
   transaction.write(byte);
 }
 
-void BMP280::readPTRegisters(int32_t &totalPress, int32_t &totalTemp)
+void BMP280::readPTRegisters()
 {
   setMode();
-  //omdat het hele spul wordt uitgelezen in 20 bit format, en bij xlsb de rechtse 4 mee doen, en de rest niet.
-  //wordt xlsb 4 keer naar rechts geshift en dan meegenomen in het totaal;
   selectRegister(adresses::pressureAdress1);
   auto transaction = bus.read(adresses::i2cAdress);
   int8_t msbPress = transaction.read_byte();
@@ -33,24 +31,62 @@ void BMP280::readPTRegisters(int32_t &totalPress, int32_t &totalTemp)
   int8_t msbTemp = transaction.read_byte();
   int8_t lsbTemp = transaction.read_byte();
   int8_t xlsbTemp = transaction.read_byte();
-  int32_t _totalPress = 0;
-  _totalPress |= msbPress;
-  _totalPress <<= 8;
-  _totalPress |= lsbPress;
-  _totalPress <<= 4;
   xlsbPress >>= 4;
-  _totalPress |= xlsbPress;
-
-  int32_t _totalTemp = 0;
-  _totalTemp |= msbTemp;
-  _totalTemp <<= 8;
-  _totalTemp |= lsbTemp;
-  _totalTemp <<= 4;
   xlsbTemp >>= 4;
-  _totalTemp |= xlsbTemp;
 
-  totalPress = _totalPress;
-  totalTemp = _totalTemp;
+  data.totalPress |= msbPress;
+  data.totalPress <<= 8;
+  data.totalPress |= lsbPress;
+  data.totalPress <<= 4;
+  data.totalPress |= xlsbPress;
+
+  data.totalTemp |= msbTemp;
+  data.totalTemp <<= 8;
+  data.totalTemp |= lsbTemp;
+  data.totalTemp <<= 4;
+  data.totalTemp |= xlsbTemp;
+}
+
+void BMP280::readTempParam()
+{
+  data.dig_t1 = readSingleByte(adresses::dig_t1Adress1) << 8;
+  data.dig_t1 |= readSingleByte(adresses::dig_t1Adress2);
+
+  data.dig_t2 = readSingleByte(adresses::dig_t2Adress1) << 8;
+  data.dig_t2 |= readSingleByte(adresses::dig_t2Adress2);
+
+  data.dig_t3 = readSingleByte(adresses::dig_t3Adress1) << 8;
+  data.dig_t3 |= readSingleByte(adresses::dig_t3Adress2);
+}
+
+void BMP280::readPressParam()
+{
+  data.dig_p1 = readSingleByte(adresses::dig_p1Adress1) << 8;
+  data.dig_p1 |= readSingleByte(adresses::dig_p1Adress2);
+
+  data.dig_p2 = readSingleByte(adresses::dig_p2Adress1) << 8;
+  data.dig_p2 |= readSingleByte(adresses::dig_p2Adress2);
+
+  data.dig_p3 = readSingleByte(adresses::dig_p3Adress1) << 8;
+  data.dig_p3 |= readSingleByte(adresses::dig_p3Adress2);
+
+  data.dig_p4 = readSingleByte(adresses::dig_p4Adress1) << 8;
+  data.dig_p4 |= readSingleByte(adresses::dig_p4Adress2);
+
+  data.dig_p5 = readSingleByte(adresses::dig_p5Adress1) << 8;
+  data.dig_p5 |= readSingleByte(adresses::dig_p5Adress2);
+
+  data.dig_p6 = readSingleByte(adresses::dig_p6Adress1) << 8;
+  data.dig_p6 |= readSingleByte(adresses::dig_p6Adress2);
+
+  data.dig_p7 = readSingleByte(adresses::dig_p7Adress1) << 8;
+  data.dig_p7 |= readSingleByte(adresses::dig_p7Adress2);
+
+  data.dig_p8 = readSingleByte(adresses::dig_p8Adress1) << 8;
+  data.dig_p8 |= readSingleByte(adresses::dig_p8Adress2);
+
+  data.dig_p9 = readSingleByte(adresses::dig_p9Adress1) << 8;
+  data.dig_p9 |= readSingleByte(adresses::dig_p9Adress2);
 }
 
 uint8_t BMP280::readId()
@@ -72,9 +108,13 @@ void BMP280::setMode()
 void BMP280::reset()
 {
   writeSingleByte(adresses::resetAdress, 0xB6);
-  hwlib::wait_ms(3000);//wait is nodig om de tijd te geven te resetten. anders is de uitkomst van de meting 10000... enz.
+  hwlib::wait_ms(3000); //wait is nodig om de tijd te geven te resetten. anders is de uitkomst van de meting 10000... enz.
 }
 
+BMP280::BMPData BMP280::returnData()
+{
+  return data;
+}
 // long signed int t_fine;
 // double bmp280_compensate_T_double(long signed int adc_T)
 // {

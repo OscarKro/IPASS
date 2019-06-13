@@ -19,14 +19,19 @@ int main(void)
     hwlib::wait_ms(10);
     oleddisplay.drawReset();
     sensor.reset();
-    while (true)
-    {
-        sensor.readPTRegisters(global::press, global::temp);
-        hwlib::cout << "pressure dec: " << hwlib::dec << global::press << hwlib::endl;
-        hwlib::cout << "temperature dec: " << hwlib::dec << global::temp << hwlib::endl;
-        hwlib::cout << "pressure bin: " << hwlib::showbase << hwlib::bin << global::press << hwlib::endl;
-        hwlib::cout << "temperature bin: " << hwlib::showbase << hwlib::bin << global::temp << hwlib::endl;
-        oleddisplay.drawTemp(global::temp);
-        hwlib::wait_ms(60000);
-    }
+    sensor.readTempParam();
+    sensor.readPressParam();
+    hwlib::cout << sensor.returnData().dig_t1 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_t2 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_t3 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p1 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p2 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p3 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p4 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p5 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p6 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p7 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p8 << hwlib::endl;
+    hwlib::cout << sensor.returnData().dig_p9 << hwlib::endl;
+    hwlib::cout << "einde --------------------------" << hwlib::endl;
 }
