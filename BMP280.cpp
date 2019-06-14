@@ -103,7 +103,16 @@ void BMP280::readPressParam()
 
 void BMP280::readId()
 {
-  data.id = readSingleByte(adresses::idAdress);
+  uint8_t id = readSingleByte(adresses::idAdress);
+  if (id == 88)
+  {
+    data.id = id;
+  }
+  else
+  {
+    data.id = 255;//error
+  }
+  
 }
 
 void BMP280::setMode()
