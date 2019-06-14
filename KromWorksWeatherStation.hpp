@@ -7,12 +7,12 @@
 class Weatherstation
 {
 private:
-BMP280& BMP280;
-oled& display;
+    BMP280 &chip;
+    oled &display;
 
 public:
-Weatherstation(BMP280& BMP280, oled& display):BMP280(BMP280), display(display) {}
-
+    Weatherstation(BMP280 &BMP280, oled &display);
+    void startUp();
 };
 
 #endif //KROMWORKSWEATHERSTATION_HPP

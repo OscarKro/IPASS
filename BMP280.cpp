@@ -108,7 +108,6 @@ void BMP280::setMode()
 void BMP280::reset()
 {
   writeSingleByte(adresses::resetAdress, 0xB6);
-  hwlib::wait_ms(3000); //wait is nodig om de tijd te geven te resetten. anders is de uitkomst van de meting 10000... enz.
 }
 
 BMP280::BMPData BMP280::returnData()

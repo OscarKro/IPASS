@@ -4,21 +4,24 @@
 oled::oled(hwlib::i2c_bus_bit_banged_scl_sda &bus)
     : bus(bus), display(bus, 0x3c), window(display, font) {}
 
-void oled::drawTemp(const int32_t x)
+void oled::resetCursor()
 {
-    window.cursor_set(hwlib::xy(0, 1));
+    window.cursor_set(hwlib::xy(0,1));
+    display.flush();
+}
+void oled::clearScreen()
+{
     display.clear();
     display.flush();
-    window << hwlib::dec << x << "\n"
-           << "Celsius";
+}
+void oled::drawTemp(const int32_t x)
+{
+    window << hwlib::dec << x;
     display.flush();
 }
 
-void oled::drawReset()
+void oled::drawText(const char *s)
 {
-    window.cursor_set(hwlib::xy(0, 1));
-    display.clear();
-    display.flush();
-    window << "reset...";
+    window << s;
     display.flush();
 }
