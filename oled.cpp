@@ -19,7 +19,11 @@ void oled::drawTemp(const int32_t x)
     window << hwlib::dec << x;
     display.flush();
 }
-
+void oled::drawByte(const uint8_t x)
+{
+    window << hwlib::dec << x;
+    display.flush();
+}
 void oled::drawText(const char *s)
 {
     window << s;

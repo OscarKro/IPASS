@@ -8,8 +8,9 @@ private:
 
     struct BMPData
     {
-        int32_t totalPress = 0;
-        int32_t totalTemp = 0;
+        uint8_t id = 0;
+        int32_t totalPressBin = 0;
+        int32_t totalTempBin = 0;
         uint16_t dig_t1 = 0;
         int16_t dig_t2 = 0;
         int16_t dig_t3 = 0;
@@ -22,6 +23,8 @@ private:
         int16_t dig_p7 = 0;
         int16_t dig_p8 = 0;
         int16_t dig_p9 = 0;
+        int32_t realTemp = 0;
+
     };
 
     enum adresses : const uint8_t
@@ -75,9 +78,10 @@ public:
     void readPTRegisters();
     void readTempParam();
     void readPressParam();
-    uint8_t readId();
+    void readId();
     void setMode();
     void reset();
+    void calculateTemp();
     BMPData returnData();
 };
 #endif //BMP280_HPP

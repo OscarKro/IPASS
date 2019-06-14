@@ -23,28 +23,40 @@ void BMP280::writeSingleByte(const uint8_t adress, const uint8_t byte)
 void BMP280::readPTRegisters()
 {
   setMode();
+  hwlib::wait_ms(10);
   selectRegister(adresses::pressureAdress1);
   auto transaction = bus.read(adresses::i2cAdress);
-  int8_t msbPress = transaction.read_byte();
-  int8_t lsbPress = transaction.read_byte();
-  int8_t xlsbPress = transaction.read_byte();
-  int8_t msbTemp = transaction.read_byte();
-  int8_t lsbTemp = transaction.read_byte();
-  int8_t xlsbTemp = transaction.read_byte();
-  xlsbPress >>= 4;
-  xlsbTemp >>= 4;
+  data.totalPressBin |= transaction.read_byte();
+  data.totalPressBin <<= 8;
+  data.totalPressBin |= transaction.read_byte();
+  data.totalPressBin <<= 4;
+  data.totalPressBin |= transaction.read_byte() >> 4;
 
-  data.totalPress |= msbPress;
-  data.totalPress <<= 8;
-  data.totalPress |= lsbPress;
-  data.totalPress <<= 4;
-  data.totalPress |= xlsbPress;
+  data.totalTempBin |= transaction.read_byte();
+  data.totalTempBin <<= 8;
+  data.totalTempBin |= transaction.read_byte();
+  data.totalTempBin <<= 4;
+  data.totalTempBin |= transaction.read_byte() >> 4;
+  // int8_t msbPress = transaction.read_byte();
+  // int8_t lsbPress = transaction.read_byte();
+  // int8_t xlsbPress = transaction.read_byte();
+  // int8_t msbTemp = transaction.read_byte();
+  // int8_t lsbTemp = transaction.read_byte();
+  // int8_t xlsbTemp = transaction.read_byte();
+  // xlsbPress >>= 4;
+  // xlsbTemp >>= 4;
 
-  data.totalTemp |= msbTemp;
-  data.totalTemp <<= 8;
-  data.totalTemp |= lsbTemp;
-  data.totalTemp <<= 4;
-  data.totalTemp |= xlsbTemp;
+  // data.totalPressBin |= msbPress;
+  // data.totalPressBin <<= 8;
+  // data.totalPressBin |= lsbPress;
+  // data.totalPressBin <<= 4;
+  // data.totalPressBin |= xlsbPress;
+
+  // data.totalTempBin |= msbTemp;
+  // data.totalTempBin <<= 8;
+  // data.totalTempBin |= lsbTemp;
+  // data.totalTempBin <<= 4;
+  // data.totalTempBin |= xlsbTemp;
 }
 
 void BMP280::readTempParam()
@@ -89,10 +101,9 @@ void BMP280::readPressParam()
   data.dig_p9 |= readSingleByte(adresses::dig_p9Adress2);
 }
 
-uint8_t BMP280::readId()
+void BMP280::readId()
 {
-  uint8_t id = readSingleByte(adresses::idAdress);
-  return id;
+  data.id = readSingleByte(adresses::idAdress);
 }
 
 void BMP280::setMode()
@@ -102,12 +113,24 @@ void BMP280::setMode()
   const uint8_t config = 0b00000000;
   writeSingleByte(adresses::ctrl_measAdress, mode);
   writeSingleByte(adresses::configAdress, config);
-  hwlib::wait_ms(10);
 }
 
 void BMP280::reset()
 {
   writeSingleByte(adresses::resetAdress, 0xB6);
+  hwlib::wait_ms(10);
+}
+
+void BMP280::calculateTemp()
+{
+  int32_t var1, var2, var3;
+  var1 = ((((data.totalTempBin >> 3) - ((int32_t)data.dig_t1 << 1))) * ((int32_t)data.dig_t2)) >> 11;
+  var2 = (((((data.totalTempBin >> 4) - ((int32_t)data.dig_t1)) * ((data.totalTempBin >> 4) - ((int32_t)data.dig_t1))) >> 12) *
+          ((int32_t)data.dig_t3)) >>
+         14;
+  var3 = var1 + var2;
+  data.realTemp = ((var3 * 5) + 128) >> 8;
+  hwlib::cout << data.realTemp/100 << hwlib::endl;
 }
 
 BMP280::BMPData BMP280::returnData()

@@ -15,6 +15,7 @@ public:
     void resetCursor();
     void clearScreen();
     void drawTemp(const int32_t x);
+    void drawByte(const uint8_t x);
     void drawText(const char *s);
 };
 

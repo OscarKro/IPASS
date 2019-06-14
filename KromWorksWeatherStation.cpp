@@ -11,7 +11,6 @@ void Weatherstation::startUp()
     display.resetCursor();
     display.drawText("starting\n");
     chip.reset();
-    hwlib::wait_ms(2000);
     display.drawText("done!");
     hwlib::wait_ms(1000);
     display.resetCursor();
@@ -20,19 +19,38 @@ void Weatherstation::startUp()
     display.drawText("param...");
     chip.readTempParam();
     chip.readPressParam();
-    hwlib::wait_ms(2000);
-    display.resetCursor();
-    display.clearScreen();
-    display.drawText("setting\n");
-    display.drawText("mode...");
-    chip.setMode();
-    hwlib::wait_ms(2000);
     display.resetCursor();
     display.clearScreen();
     display.drawText(" done!");
-    hwlib::wait_ms(2000);
+    hwlib::wait_ms(500);
+    display.resetCursor();
+    display.clearScreen();
+    display.drawText("fetching\n");
+    display.drawText("id...");
+    chip.readId();
+    display.resetCursor();
+    display.clearScreen();
+    display.drawText("id: ");
+    display.drawByte(chip.returnData().id);
+    hwlib::wait_ms(500);
     display.resetCursor();
     display.clearScreen();
     display.drawText("welcome!");
     hwlib::wait_ms(2000);
+}
+
+void Weatherstation::measurementCyle()
+{
+    chip.readPTRegisters();
+    chip.calculateTemp();
+    display.clearScreen();
+    display.resetCursor();
+    display.drawTemp(chip.returnData().realTemp / 100);
+    display.drawText(" C");
+}
+
+void Weatherstation::intervalMeasurement(uint16_t time)
+{
+    measurementCyle();
+    hwlib::wait_ms(time);
 }

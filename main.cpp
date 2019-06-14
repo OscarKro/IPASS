@@ -14,4 +14,8 @@ int main(void)
     hwlib::wait_ms(10);
     Weatherstation station(sensor, oleddisplay);
     station.startUp();
+    while (true)
+    {
+        station.intervalMeasurement(60000);
+    }
 }

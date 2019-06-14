@@ -13,6 +13,8 @@ private:
 public:
     Weatherstation(BMP280 &BMP280, oled &display);
     void startUp();
+    void measurementCyle();
+    void intervalMeasurement(uint16_t time);
 };
 
 #endif //KROMWORKSWEATHERSTATION_HPP
