@@ -4,6 +4,7 @@ Weatherstation::Weatherstation(BMP280 &BMP280, oled &display) : chip(BMP280), di
 
 void Weatherstation::startUp()
 {
+    //standard startup routine for both the chip and the led screen
     display.clearScreen();
     display.resetCursor();
     display.drawText(" Hola!");
@@ -42,6 +43,8 @@ void Weatherstation::startUp()
 
 void Weatherstation::measurementCyle()
 {
+    //one complete measurementCycle (read temperature, read pressure, calculate both, and write it to screen)
+    chip.setMode();
     chip.readPTRegisters();
     chip.calculateTemp();
     chip.calculatePress();
@@ -55,6 +58,9 @@ void Weatherstation::measurementCyle()
 
 void Weatherstation::intervalMeasurement(uint16_t time)
 {
+    //function to call one measurement cycle, with wait time (to be put in a while loop)
     measurementCyle();
+    hwlib::cout << "temperatuur: " << hwlib::dec << chip.returnData().realTemp << hwlib::endl;
+    hwlib::cout << "druk: " << hwlib::dec << chip.returnData().realPress << hwlib::endl;
     hwlib::wait_ms(time);
 }
