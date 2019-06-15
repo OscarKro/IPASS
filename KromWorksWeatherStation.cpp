@@ -19,6 +19,7 @@ void Weatherstation::startUp()
     display.drawText("param...");
     chip.readTempParam();
     chip.readPressParam();
+    chip.readPTRegisters();
     display.resetCursor();
     display.clearScreen();
     display.drawText(" done!");
@@ -43,10 +44,13 @@ void Weatherstation::measurementCyle()
 {
     chip.readPTRegisters();
     chip.calculateTemp();
+    chip.calculatePress();
     display.clearScreen();
     display.resetCursor();
-    display.drawTemp(chip.returnData().realTemp / 100);
-    display.drawText(" C");
+    display.drawInt32T(chip.returnData().realTemp);
+    display.drawText(" C\n");
+    display.drawUint32T(chip.returnData().realPress);
+    display.drawText(" hPa");
 }
 
 void Weatherstation::intervalMeasurement(uint16_t time)

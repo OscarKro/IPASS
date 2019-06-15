@@ -14,7 +14,8 @@ public:
     oled(hwlib::i2c_bus_bit_banged_scl_sda &bus);
     void resetCursor();
     void clearScreen();
-    void drawTemp(const int32_t x);
+    void drawInt32T(const int32_t x);
+    void drawUint32T(const uint32_t x);
     void drawByte(const uint8_t x);
     void drawText(const char *s);
 };

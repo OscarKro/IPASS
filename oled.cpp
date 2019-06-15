@@ -14,7 +14,12 @@ void oled::clearScreen()
     display.clear();
     display.flush();
 }
-void oled::drawTemp(const int32_t x)
+void oled::drawInt32T(const int32_t x)
+{
+    window << hwlib::dec << x;
+    display.flush();
+}
+void oled::drawUint32T(const uint32_t x)
 {
     window << hwlib::dec << x;
     display.flush();
