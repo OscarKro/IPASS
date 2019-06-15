@@ -23,16 +23,26 @@ void BMP280::writeSingleByte(const uint8_t adress, const uint8_t byte)
 void BMP280::readPTRegisters()
 {
   //burst readout
+  uint8_t x[6];
   selectRegister(adresses::pressureAdress1);
   auto transaction = bus.read(adresses::i2cAdress);
-  uint8_t msbPress = transaction.read_byte();
-  uint8_t lsbPress = transaction.read_byte();
-  uint8_t xlsbPress = transaction.read_byte();
-  uint8_t msbTemp = transaction.read_byte();
-  uint8_t lsbTemp = transaction.read_byte();
-  uint8_t xlsbTemp = transaction.read_byte();
+   transaction.read(x,6);
+   uint8_t msbPress = x[0];
+   uint8_t lsbPress = x[1];
+   uint8_t xlsbPress = x[2];
+   uint8_t msbTemp = x[3];
+   uint8_t lsbTemp = x[4];
+   uint8_t xlsbTemp = x[5];
+  // auto transaction = bus.read(adresses::i2cAdress);
+  // uint8_t msbPress = transaction.read_byte();
+  // uint8_t lsbPress = transaction.read_byte();
+  // uint8_t xlsbPress = transaction.read_byte();
+  // uint8_t msbTemp = transaction.read_byte();
+  // uint8_t lsbTemp = transaction.read_byte();
+  // uint8_t xlsbTemp = transaction.read_byte();
   xlsbPress >>= 4;
   xlsbTemp >>= 4;
+
 
   data.totalPressBin |= msbPress;
   data.totalPressBin <<= 8;
@@ -147,7 +157,7 @@ void BMP280::setMode()
 {
   //set the oversampling, measurement and filter modes on the chip
   const uint8_t mode = 0b00100101; //pressure and temperature oversampling set to 1*, mode = forced mode.
-  const uint8_t config = 0b00000000;
+  const uint8_t config = 0b00000100;
   writeSingleByte(adresses::ctrl_measAdress, mode);
   hwlib::wait_ms(10);
   writeSingleByte(adresses::configAdress, config);

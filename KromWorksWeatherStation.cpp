@@ -18,6 +18,7 @@ void Weatherstation::startUp()
     display.clearScreen();
     display.drawText("reading\n");
     display.drawText("param...");
+    chip.setMode();
     chip.readTempParam();
     chip.readPressParam();
     chip.readPTRegisters();
