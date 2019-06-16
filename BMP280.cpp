@@ -2,17 +2,20 @@
 
 BMP280::BMP280(hwlib::i2c_bus &bus) : bus(bus) {}
 
+//function to select a register
 void BMP280::selectRegister(const uint8_t adress)
 {
   bus.write(adresses::i2cAdress).write(adress);
 }
 
+//function to read one single byte
 uint8_t BMP280::readSingleByte(const uint8_t adress)
 {
   selectRegister(adress);
   return bus.read(adresses::i2cAdress).read_byte();
 }
 
+//function to write on single byte
 void BMP280::writeSingleByte(const uint8_t adress, const uint8_t byte)
 {
   auto transaction = bus.write(adresses::i2cAdress);
@@ -20,9 +23,9 @@ void BMP280::writeSingleByte(const uint8_t adress, const uint8_t byte)
   transaction.write(byte);
 }
 
+//burst readout from the raw temp and pressure registers
 void BMP280::readPTRegisters()
 {
-  //burst readout from the raw temp and pressure registers
   uint8_t bytearray[6];
   selectRegister(adresses::pressureAdress1);
   auto transaction = bus.read(adresses::i2cAdress);
@@ -43,6 +46,7 @@ void BMP280::readPTRegisters()
   data.totalTempBin |= bytearray[5];
 }
 
+//function to read al the temperature trimming registers
 void BMP280::readTempParam()
 {
   data.dig_t1 |= readSingleByte(adresses::dig_t1Adress2);
@@ -58,9 +62,9 @@ void BMP280::readTempParam()
   data.dig_t3 |= readSingleByte(adresses::dig_t3Adress1);
 }
 
+//read the pressure trimming registers
 void BMP280::readPressParam()
 {
-  //read the pressure trimming registers
   data.dig_p1 |= readSingleByte(adresses::dig_p1Adress2);
   data.dig_p1 <<= 8;
   data.dig_p1 |= readSingleByte(adresses::dig_p1Adress1);
@@ -98,23 +102,23 @@ void BMP280::readPressParam()
   data.dig_p9 |= readSingleByte(adresses::dig_p9Adress1);
 }
 
-void BMP280::readId()
+//read the id of the chip (shoud be 88) return true if succeeded
+bool BMP280::readId()
 {
-  //read the id of the chip (shoud be 88)
-  uint8_t id = readSingleByte(adresses::idAdress);
-  if (id == 88)
+  ;
+  if (readSingleByte(adresses::idAdress) == 0x58)
   {
-    data.id = id;
+    return 1;
   }
   else
   {
-    data.id = 255; //error
+    return 0;
   }
 }
 
+//set the oversampling, measurement and filter modes on the chip
 void BMP280::setMode()
 {
-  //set the oversampling, measurement and filter modes on the chip
   const uint8_t mode = 0b00100101; //pressure and temperature oversampling set to 1*, mode = forced mode.
   const uint8_t config = 0b00000100;
   writeSingleByte(adresses::ctrl_measAdress, mode);
@@ -123,17 +127,16 @@ void BMP280::setMode()
   hwlib::wait_ms(10);
 }
 
+ //reset the chip
 void BMP280::reset()
 {
-  //reset the chip
   writeSingleByte(adresses::resetAdress, 0xB6);
   hwlib::wait_ms(10);
 }
 
+//calculate the real temperature in C
 void BMP280::calculateTemp()
 {
-  //calculate the real temperature in C
-  //page 46 datasheet (32 bit architecture)
   int32_t var1, var2;
   var1 = ((((data.totalTempBin >> 3) - ((int32_t)data.dig_t1 << 1))) * ((int32_t)data.dig_t2)) >> 11;
   var2 = (((((data.totalTempBin >> 4) - ((int32_t)data.dig_t1)) * ((data.totalTempBin >> 4) - ((int32_t)data.dig_t1))) >> 12) *
@@ -144,10 +147,9 @@ void BMP280::calculateTemp()
   data.totalTempBin = 0;
 }
 
+//calculate the real pressure in hPa
 void BMP280::calculatePress()
 {
-  //calculate the real pressure in hPa
-  //page 46 datasheet (32 bit architecture)
   int32_t var1, var2;
   uint32_t p;
   var1 = (data.t_fine >> 1) - (int32_t)64000;
@@ -177,8 +179,8 @@ void BMP280::calculatePress()
   data.totalPressBin = 0;
 }
 
+//return the struct with all the data
 BMP280::BMPData BMP280::returnData()
 {
-  //return the struct with all the data
   return data;
 }

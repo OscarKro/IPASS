@@ -16,6 +16,6 @@ int main(void)
     station.startUp();
     while (true)
     {
-    station.intervalMeasurement(60000);
+        station.intervalMeasurement(60000);
     }
 }

@@ -12,10 +12,10 @@ private:
 
 public:
     oled(hwlib::i2c_bus_bit_banged_scl_sda &bus);
-    void resetCursor();
+    void resetCursor(uint8_t x, uint8_t y);
     void clearScreen();
-    void drawInt32T(const int32_t x);
-    void drawUint32T(const uint32_t x);
+    void drawInt(const int8_t x);
+    void drawInt(const uint16_t x);
     void drawByte(const uint8_t x);
     void drawText(const char *s);
 };
