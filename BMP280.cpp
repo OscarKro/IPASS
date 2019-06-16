@@ -22,70 +22,29 @@ void BMP280::writeSingleByte(const uint8_t adress, const uint8_t byte)
 
 void BMP280::readPTRegisters()
 {
-  //burst readout
-  uint8_t x[6];
+  //burst readout from the raw temp and pressure registers
+  uint8_t bytearray[6];
   selectRegister(adresses::pressureAdress1);
   auto transaction = bus.read(adresses::i2cAdress);
-   transaction.read(x,6);
-   uint8_t msbPress = x[0];
-   uint8_t lsbPress = x[1];
-   uint8_t xlsbPress = x[2];
-   uint8_t msbTemp = x[3];
-   uint8_t lsbTemp = x[4];
-   uint8_t xlsbTemp = x[5];
-  // auto transaction = bus.read(adresses::i2cAdress);
-  // uint8_t msbPress = transaction.read_byte();
-  // uint8_t lsbPress = transaction.read_byte();
-  // uint8_t xlsbPress = transaction.read_byte();
-  // uint8_t msbTemp = transaction.read_byte();
-  // uint8_t lsbTemp = transaction.read_byte();
-  // uint8_t xlsbTemp = transaction.read_byte();
-  xlsbPress >>= 4;
-  xlsbTemp >>= 4;
+  transaction.read(bytearray, 6);
+  bytearray[2] >>= 4;
+  bytearray[5] >>= 4;
 
-
-  data.totalPressBin |= msbPress;
+  data.totalPressBin |= bytearray[0];
   data.totalPressBin <<= 8;
-  data.totalPressBin |= lsbPress;
+  data.totalPressBin |= bytearray[1];
   data.totalPressBin <<= 4;
-  data.totalPressBin |= xlsbPress;
+  data.totalPressBin |= bytearray[2];
 
-  data.totalTempBin |= msbTemp;
+  data.totalTempBin |= bytearray[3];
   data.totalTempBin <<= 8;
-  data.totalTempBin |= lsbTemp;
+  data.totalTempBin |= bytearray[4];
   data.totalTempBin <<= 4;
-  data.totalTempBin |= xlsbTemp;
+  data.totalTempBin |= bytearray[5];
 }
 
 void BMP280::readTempParam()
 {
-  //read the temperature trimming registers
-  // uint8_t dig_t1LSB;
-  // uint8_t dig_t1MSB;
-  // uint8_t dig_t2LSB;
-  // uint8_t dig_t2MSB;
-  // uint8_t dig_t3LSB;
-  // uint8_t dig_t3MSB;
-  // selectRegister(adresses::dig_t1Adress1);
-  // auto transaction = bus.read(adresses::i2cAdress);
-  // dig_t1LSB = transaction.read_byte();
-  // dig_t1MSB = transaction.read_byte();
-  // dig_t2LSB = transaction.read_byte();
-  // dig_t2MSB = transaction.read_byte();
-  // dig_t3LSB = transaction.read_byte();
-  // dig_t3MSB = transaction.read_byte();
-
-  // data.dig_t1 |= dig_t1MSB;
-  // data.dig_t1 <<= 8;
-  // data.dig_t1 |= dig_t1LSB;
-  // data.dig_t2 |= dig_t2MSB;
-  // data.dig_t2 <<= 8;
-  // data.dig_t2 |= dig_t2LSB;
-  // data.dig_t3 |= dig_t3MSB;
-  // data.dig_t3 <<= 8;
-  // data.dig_t3 |= dig_t3LSB;
-  //bovenstaande burst-read out van de dig_t registers gaf dezelfde waarde als 1 voor 1 uitlezen...
-
   data.dig_t1 |= readSingleByte(adresses::dig_t1Adress2);
   data.dig_t1 <<= 8;
   data.dig_t1 |= readSingleByte(adresses::dig_t1Adress1);
@@ -182,6 +141,7 @@ void BMP280::calculateTemp()
          14;
   data.t_fine = var1 + var2;
   data.realTemp = ((data.t_fine * 5 + 128) >> 8) / 100;
+  data.totalTempBin = 0;
 }
 
 void BMP280::calculatePress()
@@ -214,6 +174,7 @@ void BMP280::calculatePress()
   var2 = (((int32_t)(p >> 2)) * ((int32_t)data.dig_p8)) >> 13;
   p = (uint32_t)((int32_t)p + ((var1 + var2 + data.dig_p7) >> 4));
   data.realPress = p / 100;
+  data.totalPressBin = 0;
 }
 
 BMP280::BMPData BMP280::returnData()

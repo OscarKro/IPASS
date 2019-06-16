@@ -9,8 +9,8 @@ private:
     struct BMPData
     {
         uint8_t id = 0;
-        uint32_t totalPressBin = 0;
-        uint32_t totalTempBin = 0;
+        int32_t totalPressBin = 0;
+        int32_t totalTempBin = 0;
         uint16_t dig_t1 = 0;
         int16_t dig_t2 = 0;
         int16_t dig_t3 = 0;

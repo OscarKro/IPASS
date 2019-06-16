@@ -22,6 +22,8 @@ void Weatherstation::startUp()
     chip.readTempParam();
     chip.readPressParam();
     chip.readPTRegisters();
+    chip.calculateTemp();
+    chip.calculatePress();
     display.resetCursor();
     display.clearScreen();
     display.drawText(" done!");
@@ -61,7 +63,5 @@ void Weatherstation::intervalMeasurement(uint16_t time)
 {
     //function to call one measurement cycle, with wait time (to be put in a while loop)
     measurementCyle();
-    hwlib::cout << "temperatuur: " << hwlib::dec << chip.returnData().realTemp << hwlib::endl;
-    hwlib::cout << "druk: " << hwlib::dec << chip.returnData().realPress << hwlib::endl;
     hwlib::wait_ms(time);
 }
