@@ -117,10 +117,10 @@ bool BMP280::readId()
 }
 
 //set the oversampling, measurement and filter modes on the chip.
-void BMP280::setMode()
+void BMP280::setMode(uint8_t mode)
 {
   const uint8_t config = 0b00000100; //pressure filter on
-  writeSingleByte(adresses::ctrl_measAdress, mode.oversampelingOneTime);
+  writeSingleByte(adresses::ctrl_measAdress, mode);
   hwlib::wait_ms(10);
   writeSingleByte(adresses::configAdress, config);
   hwlib::wait_ms(10);
@@ -179,7 +179,12 @@ void BMP280::calculatePress()
 }
 
 //return the struct with all the data.
-BMP280::BMPData BMP280::returnData()
+BMP280::BMPData BMP280::returnDataStruct()
 {
   return data;
+}
+//return the struct with the possible resolution modes
+BMP280::precisionMode BMP280::returnModeStruct()
+{
+  return mode;
 }

@@ -75,13 +75,12 @@ private:
         const uint8_t oversampelingTwoTimes = 0b01001001;
         const uint8_t oversampelingFourTimes = 0b01101101;
         const uint8_t oversampelingEightTimes = 0b10010001; 
-        const uint8_t oversampelingSixteenTimes = 0b10110101;
     };
 
     BMPData data;
     precisionMode mode;
     void selectRegister(const uint8_t adress);
-    
+
 public:
     BMP280(hwlib::i2c_bus &bus);
     uint8_t readSingleByte(const uint8_t adress);
@@ -90,10 +89,11 @@ public:
     void readTempParam();
     void readPressParam();
     bool readId();
-    void setMode();
+    void setMode(uint8_t mode);
     void reset();
     void calculateTemp();
     void calculatePress();
-    BMPData returnData();
+    BMPData returnDataStruct();
+    precisionMode returnModeStruct();
 };
 #endif //BMP280_HPP

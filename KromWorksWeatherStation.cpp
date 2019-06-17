@@ -5,17 +5,17 @@ Weatherstation::Weatherstation(BMP280 &BMP280, oled &display, hwlib::pin_in &but
 //one complete measurementCycle (read temperature, read pressure, calculate both, and write it to screen).
 void Weatherstation::measurementCyle()
 {
-    chip.setMode();
+    chip.setMode(chip.returnModeStruct().oversampelingOneTime);
     chip.readPTRegisters();
     chip.calculateTemp();
     chip.calculatePress();
     display.clearScreen();
     display.resetCursor(0, 1);
-    display.drawInt(chip.returnData().realTemp);
+    display.drawInt(chip.returnDataStruct().realTemp);
     display.drawText(" C\n");
-    display.drawInt(chip.returnData().realPress);
+    display.drawInt(chip.returnDataStruct().realPress);
     display.drawText(" hPa");
-    data.pushBack(chip.returnData().realTemp, chip.returnData().realPress);
+    data.pushBack(chip.returnDataStruct().realTemp, chip.returnDataStruct().realPress);
 }
 
 //standard startup routine for the chip, led screen and the button.
@@ -44,7 +44,6 @@ void Weatherstation::startUp()
     display.drawText("done!");
     display.flush();
     hwlib::wait_ms(500);
-
     display.resetCursor(0, 1);
     display.clearScreen();
     display.drawText("connect\nchip");
@@ -90,13 +89,12 @@ void Weatherstation::startUp()
         hwlib::wait_ms(500);
         return startUp();
     }
-
     display.resetCursor(0, 1);
     display.clearScreen();
     display.drawText("reading\n");
     display.drawText("param...");
     display.flush();
-    chip.setMode();
+    chip.setMode(chip.returnModeStruct().oversampelingOneTime);
     chip.readTempParam();
     chip.readPressParam();
     chip.readPTRegisters();
@@ -107,7 +105,6 @@ void Weatherstation::startUp()
     display.drawText(" done!");
     display.flush();
     hwlib::wait_ms(500);
-
     display.resetCursor(0, 1);
     display.clearScreen();
     display.drawText("welcome!");
@@ -129,12 +126,12 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
         firstMeasurement = 0;
         display.clearScreen();
         display.resetCursor(0, 1);
-        display.drawInt(chip.returnData().realTemp);
+        display.drawInt(chip.returnDataStruct().realTemp);
         display.drawText(" C\n");
-        display.drawInt(chip.returnData().realPress);
+        display.drawInt(chip.returnDataStruct().realPress);
         display.drawText(" hPa");
         display.flush();
-        data.pushBack(chip.returnData().realTemp, chip.returnData().realPress);
+        data.pushBack(chip.returnDataStruct().realTemp, chip.returnDataStruct().realPress);
     }
 
     while (true)
@@ -151,9 +148,9 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
                 {
                     display.clearScreen();
                     display.resetCursor(0, 1);
-                    display.drawInt(chip.returnData().realTemp);
+                    display.drawInt(chip.returnDataStruct().realTemp);
                     display.drawText(" C\n");
-                    display.drawInt(chip.returnData().realPress);
+                    display.drawInt(chip.returnDataStruct().realPress);
                     display.drawText(" hPa");
                     display.flush();
                     break;
