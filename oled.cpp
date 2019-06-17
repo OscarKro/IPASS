@@ -44,3 +44,9 @@ void oled::drawText(const char *s)
     window << s;
     display.flush();
 }
+void oled::drawLine(const hwlib::xy& start, const hwlib::xy& end)
+{
+    hwlib::line line(start,end);
+    line.draw(display);
+    display.flush();
+}

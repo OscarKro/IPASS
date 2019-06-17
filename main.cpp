@@ -5,6 +5,7 @@
 
 int main(void)
 {
+    uint8_t n = 0;
     auto scl = hwlib::target::pin_oc(hwlib::target::pins::scl);
     auto sda = hwlib::target::pin_oc(hwlib::target::pins::sda);
     auto mainBus = hwlib::i2c_bus_bit_banged_scl_sda(scl, sda);
@@ -16,6 +17,12 @@ int main(void)
     station.startUp();
     while (true)
     {
-        station.intervalMeasurement(60000);
+        n++;
+        station.measurementWithInterval(60000);
+        if (n == 30)
+        {
+            station.drawChart();
+            break;
+        }
     }
 }

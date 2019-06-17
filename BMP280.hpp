@@ -69,10 +69,9 @@ private:
     };
 
     BMPData data;
-
+    void selectRegister(const uint8_t adress);
 public:
     BMP280(hwlib::i2c_bus &bus);
-    void selectRegister(const uint8_t adress);
     uint8_t readSingleByte(const uint8_t adress);
     void writeSingleByte(const uint8_t adress, const uint8_t byte);
     void readPTRegisters();

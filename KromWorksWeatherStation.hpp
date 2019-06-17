@@ -14,52 +14,34 @@ private:
     //struct to keep track of all the measurements, (untill maxMeas) to show in a graphic
     struct WeatherstationData
     {
-        uint8_t maxMeas = 10;
-        uint8_t count = 0;
-        int8_t tempArray[60] = {};
-        uint16_t pressArray[60] = {};
-        void pushBack(int8_t data)
+        uint8_t maxnMeas = 30;
+        uint8_t n = 0;
+        int8_t tempArray[30] = {};
+        uint16_t pressArray[30] = {};
+        void pushBack(int8_t dataTemp, uint16_t dataPress)
         {
-            if (count < maxMeas)
+            if (n < maxnMeas)
             {
-                tempArray[count] = data;
-                count++;
+                tempArray[n] = dataTemp;
+                pressArray[n] = dataPress;
+                n++;
             }
-            else if (count >= maxMeas)
+            else if (n >= maxnMeas)
             {
-                count = 0;
-                tempArray[count] = data;
+                n = 0;
+                tempArray[n] = dataTemp;
+                pressArray[n] = dataPress;
             }
         }
-        void pushBack(uint16_t data)
+        void popBack()
         {
-            if (count < maxMeas)
-            {
-                pressArray[count] = data;
-                count++;
-            }
-            else if (count >= maxMeas)
-            {
-                count = 0;
-                pressArray[count] = data;
-            }
-        }
-        void popBack(char arraytype)
-        {
-            if (arraytype == 't')
-            {
-                tempArray[count] = 0;
-                count--;
-            }
-            else if (arraytype == 'p')
-            {
-                pressArray[count] = 0;
-                count--;
-            }
+                tempArray[n] = 0;
+                pressArray[n] = 0;
+                n--;
         }
         void wipeData()
         {
-            for (uint8_t i = 0; i < count; i++)
+            for (uint8_t i = 0; i < n; i++)
             {
                 tempArray[i] = 0;
                 pressArray[i] = 0;
@@ -68,12 +50,13 @@ private:
     };
 
     WeatherstationData data;
-
+    void measurementCyle();
 public:
     Weatherstation(BMP280 &BMP280, oled &display);
     void startUp();
-    void measurementCyle();
-    void intervalMeasurement(uint16_t time);
+    void measurementWithInterval(uint16_t time);
+    void drawChart();
+
 };
 
 #endif //KROMWORKSWEATHERSTATION_HPP
