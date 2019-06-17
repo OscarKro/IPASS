@@ -9,9 +9,10 @@ class Weatherstation
 private:
     BMP280 &chip;
     oled &display;
-    bool firstMeasurement = true;
+    hwlib::pin_in &button;
+    bool firstMeasurement = 1;
 
-    //struct to keep track of all the measurements, (untill maxMeas) to show in a graphic
+    //struct to keep track of all the measurements, (untill maxMeas) to show in a graphic.
     struct WeatherstationData
     {
         uint8_t maxnMeas = 30;
@@ -55,9 +56,9 @@ private:
     void measurementCyle();
 
 public:
-    Weatherstation(BMP280 &BMP280, oled &display);
+    Weatherstation(BMP280 &BMP280, oled &display, hwlib::pin_in &button);
     void startUp();
-    void measurementWithInterval(uint16_t time);
+    void measurementWithInterval(uint8_t timeInMinutes);
     void drawChart();
 };
 
