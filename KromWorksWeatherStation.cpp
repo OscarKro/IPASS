@@ -114,11 +114,11 @@ void Weatherstation::drawChart()
     {
         if (i == 0)
         {
-            display.drawLine(hwlib::xy(topLeftPoint.x, zeroDegreesPoint.y), hwlib::xy(xPoint, zeroDegreesPoint.y - data.tempArray[i]));
+            display.drawLine(hwlib::xy(topLeftPoint.x, zeroDegreesPoint.y-data.tempArray[i]), hwlib::xy(xPoint, zeroDegreesPoint.y - data.tempArray[i]));
         }
         else
         {
-            display.drawLine(hwlib::xy(xPoint - 10, zeroDegreesPoint.y - data.tempArray[i - 1]), hwlib::xy(xPoint, zeroDegreesPoint.y -
+            display.drawLine(hwlib::xy(xPoint - 4, zeroDegreesPoint.y - data.tempArray[i - 1]), hwlib::xy(xPoint, zeroDegreesPoint.y -
                                                                                                                        data.tempArray[i]));
         }
         xPoint += 4;

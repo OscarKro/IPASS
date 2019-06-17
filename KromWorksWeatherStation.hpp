@@ -16,7 +16,9 @@ private:
     {
         uint8_t maxnMeas = 30;
         uint8_t n = 0;
-        int8_t tempArray[30] = {};
+        int8_t tempArray[30] = {5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10};
+        //test array voor de grafiek
+        //int8_t tempArray[30] = {5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10};
         uint16_t pressArray[30] = {};
         void pushBack(int8_t dataTemp, uint16_t dataPress)
         {
@@ -35,9 +37,9 @@ private:
         }
         void popBack()
         {
-                tempArray[n] = 0;
-                pressArray[n] = 0;
-                n--;
+            tempArray[n] = 0;
+            pressArray[n] = 0;
+            n--;
         }
         void wipeData()
         {
@@ -51,12 +53,12 @@ private:
 
     WeatherstationData data;
     void measurementCyle();
+
 public:
     Weatherstation(BMP280 &BMP280, oled &display);
     void startUp();
     void measurementWithInterval(uint16_t time);
     void drawChart();
-
 };
 
 #endif //KROMWORKSWEATHERSTATION_HPP
