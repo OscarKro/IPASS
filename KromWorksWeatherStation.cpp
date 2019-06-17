@@ -28,28 +28,34 @@ void Weatherstation::startUp()
     display.clearScreen();
     display.resetCursor(0, 1);
     display.drawText("KromWork\n");
+    display.flush();
     hwlib::wait_ms(1000);
     display.clearScreen();
     display.resetCursor(0, 1);
     display.drawText("Weather\nstation");
+    display.flush();
     hwlib::wait_ms(1000);
 
     display.resetCursor(0, 1);
     display.clearScreen();
     display.drawText("starting\n");
+    display.flush();
     chip.reset();
     display.drawText("done!");
+    display.flush();
     hwlib::wait_ms(500);
 
     display.resetCursor(0, 1);
     display.clearScreen();
     display.drawText("connect\nchip");
+    display.flush();
     hwlib::wait_ms(500);
     if (chip.readId() == 1)
     {
         display.clearScreen();
         display.resetCursor(0, 1);
         display.drawText("succes");
+        display.flush();
         hwlib::wait_ms(500);
     }
     else
@@ -57,6 +63,7 @@ void Weatherstation::startUp()
         display.clearScreen();
         display.resetCursor(0, 1);
         display.drawText("error\nrestart");
+        display.flush();
         hwlib::wait_ms(500);
         return startUp();
     }
@@ -64,12 +71,14 @@ void Weatherstation::startUp()
     display.resetCursor(0,1);
     display.clearScreen();
     display.drawText("checking\nbutton");
+    display.flush();
     hwlib::wait_ms(500);
     if(!button.read())
     {
         display.clearScreen();
         display.resetCursor(0,1);
         display.drawText("succes");
+        display.flush();
         hwlib::wait_ms(500);
     }
     else
@@ -77,6 +86,7 @@ void Weatherstation::startUp()
         display.clearScreen();
         display.resetCursor(0,1);
         display.drawText("error\nrestart");
+        display.flush();
         hwlib::wait_ms(500);
         return startUp();
     }
@@ -85,6 +95,7 @@ void Weatherstation::startUp()
     display.clearScreen();
     display.drawText("reading\n");
     display.drawText("param...");
+    display.flush();
     chip.setMode();
     chip.readTempParam();
     chip.readPressParam();
@@ -94,11 +105,13 @@ void Weatherstation::startUp()
     display.resetCursor(0, 1);
     display.clearScreen();
     display.drawText(" done!");
+    display.flush();
     hwlib::wait_ms(500);
 
     display.resetCursor(0, 1);
     display.clearScreen();
     display.drawText("welcome!");
+    display.flush();
     hwlib::wait_ms(1000);
 }
 
@@ -120,6 +133,7 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
         display.drawText(" C\n");
         display.drawInt(chip.returnData().realPress);
         display.drawText(" hPa");
+        display.flush();
         data.pushBack(chip.returnData().realTemp, chip.returnData().realPress);
     }
 
@@ -129,6 +143,7 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
         if (button.read())
         {
             drawChart();
+            display.flush();
             hwlib::wait_ms(buttonWaitTime);
             while (true)
             {
@@ -140,6 +155,7 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
                     display.drawText(" C\n");
                     display.drawInt(chip.returnData().realPress);
                     display.drawText(" hPa");
+                    display.flush();
                     break;
                 }
                 hwlib::wait_ms(buttonCheckTime);

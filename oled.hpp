@@ -19,6 +19,7 @@ public:
     void drawByte(const uint8_t x);
     void drawText(const char *s);
     void drawLine(const hwlib::xy& start, const hwlib::xy& end);
+    void flush();
 };
 
 #endif //OLED_HPP
