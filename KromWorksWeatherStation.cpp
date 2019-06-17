@@ -156,13 +156,13 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
 //function to write a chart to the oled screen using the temperature data from 30 minutes.
 void Weatherstation::drawChart()
 {
+    uint16_t xPoint = 4;
     display.clearScreen();
     hwlib::xy topLeftPoint(0, 0);
     hwlib::xy zeroDegreesPoint(127, 32);
     display.drawLine(topLeftPoint, hwlib::xy(topLeftPoint.x, zeroDegreesPoint.y + 32));
     display.drawLine(hwlib::xy(topLeftPoint.x, zeroDegreesPoint.y), hwlib::xy(zeroDegreesPoint.x, zeroDegreesPoint.y));
-    uint16_t xPoint = 4;
-    for (uint8_t i : data.tempArray)
+    for (uint8_t i = 0; i < data.maxnMeas; i++)
     {
         if (i == 0)
         {
