@@ -119,9 +119,8 @@ bool BMP280::readId()
 //set the oversampling, measurement and filter modes on the chip.
 void BMP280::setMode()
 {
-  const uint8_t mode = 0b00100101; //pressure and temperature oversampling set to 1*, mode = forced mode.
-  const uint8_t config = 0b00000100;
-  writeSingleByte(adresses::ctrl_measAdress, mode);
+  const uint8_t config = 0b00000100; //pressure filter on
+  writeSingleByte(adresses::ctrl_measAdress, mode.oversampelingOneTime);
   hwlib::wait_ms(10);
   writeSingleByte(adresses::configAdress, config);
   hwlib::wait_ms(10);

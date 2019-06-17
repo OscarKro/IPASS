@@ -68,8 +68,20 @@ private:
         dig_p9Adress2,
     };
 
+    struct precisionMode
+    {
+        const uint8_t off = 00000001;
+        const uint8_t oversampelingOneTime = 0b00100101;
+        const uint8_t oversampelingTwoTimes = 0b01001001;
+        const uint8_t oversampelingFourTimes = 0b01101101;
+        const uint8_t oversampelingEightTimes = 0b10010001; 
+        const uint8_t oversampelingSixteenTimes = 0b10110101;
+    };
+
     BMPData data;
+    precisionMode mode;
     void selectRegister(const uint8_t adress);
+    
 public:
     BMP280(hwlib::i2c_bus &bus);
     uint8_t readSingleByte(const uint8_t adress);

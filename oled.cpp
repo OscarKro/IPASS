@@ -14,7 +14,6 @@ void oled::clearScreen()
 {
     display.clear();
 }
-
 //function to draw a int8_t to the screen (for the temperature)
 void oled::drawInt(const int8_t x)
 {
