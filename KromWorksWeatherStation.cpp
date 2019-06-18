@@ -15,6 +15,7 @@ void Weatherstation::measurementCyle()
     display.drawText(" C\n");
     display.drawInt(chip.returnDataStruct().realPress);
     display.drawText(" hPa");
+    display.flush();
     data.pushBack(chip.returnDataStruct().realTemp, chip.returnDataStruct().realPress);
 }
 
@@ -67,15 +68,15 @@ void Weatherstation::startUp()
         return startUp();
     }
 
-    display.resetCursor(0,1);
+    display.resetCursor(0, 1);
     display.clearScreen();
     display.drawText("checking\nbutton");
     display.flush();
     hwlib::wait_ms(500);
-    if(!button.read())
+    if (!button.read())
     {
         display.clearScreen();
-        display.resetCursor(0,1);
+        display.resetCursor(0, 1);
         display.drawText("succes");
         display.flush();
         hwlib::wait_ms(500);
@@ -83,7 +84,7 @@ void Weatherstation::startUp()
     else
     {
         display.clearScreen();
-        display.resetCursor(0,1);
+        display.resetCursor(0, 1);
         display.drawText("error\nrestart");
         display.flush();
         hwlib::wait_ms(500);
@@ -158,7 +159,7 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
                 hwlib::wait_ms(buttonCheckTime);
             }
         }
-        else if (!firstMeasurement && measCounter == (timeInMinutes * 6000))
+        else if (!firstMeasurement && measCounter == (timeInMinutes * 600))
         {
             measurementCyle();
             return;
