@@ -1,6 +1,6 @@
 #include "oled.hpp"
 
-oled::oled(hwlib::i2c_bus_bit_banged_scl_sda &bus)
+oled::oled(hwlib::i2c_bus &bus)
     : bus(bus), display(bus, 0x3c), window(display, font) {}
 
 //function to reset the cursur back to the (almost) top left

@@ -21,35 +21,9 @@ private:
         //test array voor de grafiek
         //int8_t tempArray[30] = {5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10};
         uint16_t pressArray[30] = {};
-        void pushBack(int8_t dataTemp, uint16_t dataPress)
-        {
-            if (n < maxnMeas)
-            {
-                tempArray[n] = dataTemp;
-                pressArray[n] = dataPress;
-                n++;
-            }
-            else if (n >= maxnMeas)
-            {
-                n = 0;
-                tempArray[n] = dataTemp;
-                pressArray[n] = dataPress;
-            }
-        }
-        void popBack()
-        {
-            tempArray[n] = 0;
-            pressArray[n] = 0;
-            n--;
-        }
-        void wipeData()
-        {
-            for (uint8_t i = 0; i < n; i++)
-            {
-                tempArray[i] = 0;
-                pressArray[i] = 0;
-            }
-        }
+        void pushBack(int8_t dataTemp, uint16_t dataPress);
+        void popBack();
+        void wipeData();
     };
 
     WeatherstationData data;

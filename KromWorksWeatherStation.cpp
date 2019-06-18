@@ -1,7 +1,39 @@
 #include "KromWorksWeatherStation.hpp"
 
+//constructor from weatherstation. Requires a BMP280 object, an oled class display and a pin_in object
 Weatherstation::Weatherstation(BMP280 &BMP280, oled &display, hwlib::pin_in &button) : chip(BMP280), display(display), button(button) {}
-
+//function to push back the data from the chip into their respective data array
+void Weatherstation::WeatherstationData::pushBack(int8_t dataTemp, uint16_t dataPress)
+{
+    if (n < maxnMeas)
+    {
+        tempArray[n] = dataTemp;
+        pressArray[n] = dataPress;
+        n++;
+    }
+    else if (n >= maxnMeas)
+    {
+        n = 0;
+        tempArray[n] = dataTemp;
+        pressArray[n] = dataPress;
+    }
+}
+//function to wipe the last item in both the data arrays
+void Weatherstation::WeatherstationData::popBack()
+{
+    tempArray[n] = 0;
+    pressArray[n] = 0;
+    n--;
+}
+//function to wipe all the data from both the data arrays
+void Weatherstation::WeatherstationData::wipeData()
+{
+    for (uint8_t i = 0; i < n; i++)
+    {
+        tempArray[i] = 0;
+        pressArray[i] = 0;
+    }
+}
 //one complete measurementCycle (read temperature, read pressure, calculate both, and write it to screen).
 void Weatherstation::measurementCyle()
 {

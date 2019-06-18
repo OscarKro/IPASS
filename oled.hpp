@@ -4,14 +4,14 @@
 class oled
 {
 private:
-    hwlib::i2c_bus_bit_banged_scl_sda &bus;
+    hwlib::i2c_bus &bus;
     hwlib::glcd_oled display;
 
     hwlib::font_default_16x16 font;
     hwlib::terminal_from window;
 
 public:
-    oled(hwlib::i2c_bus_bit_banged_scl_sda &bus);
+    oled(hwlib::i2c_bus &bus);
     void resetCursor(uint8_t x, uint8_t y);
     void clearScreen();
     void drawInt(const int8_t x);
