@@ -1,7 +1,8 @@
 #include "KromWorksWeatherStation.hpp"
 
 //constructor from weatherstation. Requires a BMP280 object, an oled class display and a pin_in object
-Weatherstation::Weatherstation(BMP280 &BMP280, oled &display, hwlib::pin_in &button) : chip(BMP280), display(display), button(button) {}
+Weatherstation::Weatherstation(BMP280 &BMP280, WeatherStationDisplay &display, hwlib::pin_in &button) : chip(BMP280), display(display), button(button) {}
+
 //function to push back the data from the chip into their respective data array
 void Weatherstation::WeatherstationData::pushBack(int8_t dataTemp, uint16_t dataPress)
 {
@@ -151,6 +152,7 @@ void Weatherstation::startUp()
 void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
 {
     uint32_t measCounter = 0;
+    uint32_t timeInterval = timeInMinutes*6000;
     uint8_t buttonWaitTime = 100;
     uint8_t buttonCheckTime = 10;
 
@@ -191,7 +193,7 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
                 hwlib::wait_ms(buttonCheckTime);
             }
         }
-        else if (!firstMeasurement && measCounter == (timeInMinutes * 600))
+        else if (!firstMeasurement && measCounter == timeInterval)
         {
             measurementCyle();
             return;
