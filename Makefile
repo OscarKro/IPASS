@@ -9,10 +9,10 @@
 #############################################################################
 
 # source files in this project (main.cpp is automatically assumed)
-SOURCES := WeatherStationDisplay.cpp BMP280.cpp KromWorksWeatherStation.cpp
+SOURCES := WeatherStationDisplay.cpp BMP280.cpp KromWorksWeatherStation.cpp BoschBM.cpp
 
 # header files in this project
-HEADERS := WeatherStationDisplay.hpp BMP280.hpp KromWorksWeatherStation.hpp
+HEADERS := WeatherStationDisplay.hpp BMP280.hpp KromWorksWeatherStation.hpp BoschBM.hpp
 
 # other places to look for files for this project
 SEARCH  := 

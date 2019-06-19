@@ -1,10 +1,10 @@
 #ifndef BMP280_HPP
 #define BMP280_HPP
 #include "hwlib.hpp"
-class BMP280
+#include "BoschBM.hpp"
+class BMP280 : public BoschBM
 {
 private:
-    hwlib::i2c_bus &bus;
 
     struct BMPData
     {
@@ -26,6 +26,20 @@ private:
         int8_t realTemp = 0;
         uint16_t realPress = 0;
     };
+
+    struct precisionMode
+    {
+        const uint8_t off = 00000001;
+        const uint8_t oversampelingOneTime = 0b00100101;
+        const uint8_t oversampelingTwoTimes = 0b01001001;
+        const uint8_t oversampelingFourTimes = 0b01101101;
+        const uint8_t oversampelingEightTimes = 0b10010001;
+    };
+
+    BMPData data;
+    precisionMode mode;
+
+public:
 
     enum adresses : const uint8_t
     {
@@ -68,28 +82,12 @@ private:
         dig_p9Adress2,
     };
 
-    struct precisionMode
-    {
-        const uint8_t off = 00000001;
-        const uint8_t oversampelingOneTime = 0b00100101;
-        const uint8_t oversampelingTwoTimes = 0b01001001;
-        const uint8_t oversampelingFourTimes = 0b01101101;
-        const uint8_t oversampelingEightTimes = 0b10010001; 
-    };
-
-    BMPData data;
-    precisionMode mode;
-    void selectRegister(const uint8_t adress);
-
-public:
     BMP280(hwlib::i2c_bus &bus);
-    uint8_t readSingleByte(const uint8_t adress);
-    void writeSingleByte(const uint8_t adress, const uint8_t byte);
-    void readPTRegisters();
+    void readPTregisters();
     void readTempParam();
     void readPressParam();
     bool readId();
-    void setMode(uint8_t mode);
+    void setMode(const uint8_t mode);
     void reset();
     void calculateTemp();
     void calculatePress();

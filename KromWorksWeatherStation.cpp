@@ -39,7 +39,7 @@ void Weatherstation::WeatherstationData::wipeData()
 void Weatherstation::measurementCyle()
 {
     chip.setMode(chip.returnModeStruct().oversampelingOneTime);
-    chip.readPTRegisters();
+    chip.readPTregisters();
     chip.calculateTemp();
     chip.calculatePress();
     display.clearScreen();
@@ -131,7 +131,7 @@ void Weatherstation::startUp()
     chip.setMode(chip.returnModeStruct().oversampelingOneTime);
     chip.readTempParam();
     chip.readPressParam();
-    chip.readPTRegisters();
+    chip.readPTregisters();
     chip.calculateTemp();
     chip.calculatePress();
     display.resetCursor(0, 1);
