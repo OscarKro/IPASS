@@ -15,13 +15,18 @@ void WeatherStationDisplay::clearScreen()
 {
     terminal.clear();
 }
-//function to draw a int8_t to the screen (for the temperature)
+//function to draw a int8_t to the screen 
 void WeatherStationDisplay::drawInt(const int8_t x)
 {
     terminal << hwlib::dec << x;
 }
+//function to draw a int16_t to the screen
+void WeatherStationDisplay::drawInt(const int16_t x)
+{
+    terminal << hwlib::dec << x;
+}
 
-//function to draw an unsigned int8_t to the screen (for the pressure in hPa)
+//function to draw an unsigned int8_t to the screen 
 void WeatherStationDisplay::drawInt(const uint16_t x)
 {
     terminal << hwlib::dec << x;

@@ -119,7 +119,8 @@ void BMP280::calculateTemp()
           ((int32_t)data.dig_t3)) >>
          14;
   data.t_fine = var1 + var2;
-  data.realTemp = ((data.t_fine * 5 + 128) >> 8) / 100;
+  data.realTempMS = ((data.t_fine * 5 + 128) >> 8) / 100;
+  data.realTempLS = ((data.t_fine * 5 + 128) >> 8) - (data.realTempMS * 100);
   data.totalTempBin = 0;
 }
 

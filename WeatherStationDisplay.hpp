@@ -13,6 +13,7 @@ public:
     void resetCursor(uint8_t x, uint8_t y);
     void clearScreen();
     void drawInt(const int8_t x);
+    void drawInt(const int16_t x);
     void drawInt(const uint16_t x);
     void drawByte(const uint8_t x);
     void drawText(const char *s);

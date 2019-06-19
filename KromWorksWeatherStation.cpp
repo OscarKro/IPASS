@@ -42,14 +42,8 @@ void Weatherstation::measurementCyle()
     chip.readPTregisters();
     chip.calculateTemp();
     chip.calculatePress();
-    display.clearScreen();
-    display.resetCursor(0, 1);
-    display.drawInt(chip.returnDataStruct().realTemp);
-    display.drawText(" C\n");
-    display.drawInt(chip.returnDataStruct().realPress);
-    display.drawText(" hPa");
-    display.flush();
-    data.pushBack(chip.returnDataStruct().realTemp, chip.returnDataStruct().realPress);
+    drawTempAndPress();
+    data.pushBack(chip.returnDataStruct().realTempMS, chip.returnDataStruct().realPress);
 }
 
 //standard startup routine for the chip, led screen and the button.
@@ -70,8 +64,8 @@ void Weatherstation::startUp()
     display.flush();
     hwlib::wait_ms(1000);
 
-    display.resetCursor(0, 1);
     display.clearScreen();
+    display.resetCursor(0, 1);
     display.drawText("starting\n");
     display.flush();
     chip.reset();
@@ -101,8 +95,8 @@ void Weatherstation::startUp()
         return startUp();
     }
 
-    display.resetCursor(0, 1);
     display.clearScreen();
+    display.resetCursor(0, 1);
     display.drawText("checking\nbutton");
     display.flush();
     hwlib::wait_ms(500);
@@ -123,8 +117,8 @@ void Weatherstation::startUp()
         hwlib::wait_ms(500);
         return startUp();
     }
-    display.resetCursor(0, 1);
     display.clearScreen();
+    display.resetCursor(0, 1);
     display.drawText("reading\n");
     display.drawText("param...");
     display.flush();
@@ -134,8 +128,8 @@ void Weatherstation::startUp()
     chip.readPTregisters();
     chip.calculateTemp();
     chip.calculatePress();
-    display.resetCursor(0, 1);
     display.clearScreen();
+    display.resetCursor(0, 1);
     display.drawText(" done!");
     display.flush();
     hwlib::wait_ms(500);
@@ -146,27 +140,33 @@ void Weatherstation::startUp()
     hwlib::wait_ms(1000);
 }
 
+void Weatherstation::drawTempAndPress()
+{
+    display.clearScreen();
+    display.resetCursor(0, 1);
+    display.drawInt(chip.returnDataStruct().realTempMS);
+    display.drawText(".");
+    display.drawInt(chip.returnDataStruct().realTempLS);
+    display.drawText(" C\n");
+    display.drawInt(chip.returnDataStruct().realPress);
+    display.drawText(" hPa");
+    display.flush();
+}
 //function to call one measurement cycle, with wait time in minutes(to be put in a while loop).
 //this function also listens to the button. If the button is pressed, it shows the chart, if it is then pressed
 //again, it continues the measurement cycle.
 void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
 {
     uint32_t measCounter = 0;
-    uint32_t timeInterval = timeInMinutes*6000;
+    uint32_t timeInterval = timeInMinutes * 6000;
     uint8_t buttonWaitTime = 100;
     uint8_t buttonCheckTime = 10;
 
     if (firstMeasurement)
     {
         firstMeasurement = 0;
-        display.clearScreen();
-        display.resetCursor(0, 1);
-        display.drawInt(chip.returnDataStruct().realTemp);
-        display.drawText(" C\n");
-        display.drawInt(chip.returnDataStruct().realPress);
-        display.drawText(" hPa");
-        display.flush();
-        data.pushBack(chip.returnDataStruct().realTemp, chip.returnDataStruct().realPress);
+        drawTempAndPress();
+        data.pushBack(chip.returnDataStruct().realTempMS, chip.returnDataStruct().realPress);
     }
 
     while (true)
@@ -181,13 +181,7 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
             {
                 if (button.read())
                 {
-                    display.clearScreen();
-                    display.resetCursor(0, 1);
-                    display.drawInt(chip.returnDataStruct().realTemp);
-                    display.drawText(" C\n");
-                    display.drawInt(chip.returnDataStruct().realPress);
-                    display.drawText(" hPa");
-                    display.flush();
+                    drawTempAndPress();
                     break;
                 }
                 hwlib::wait_ms(buttonCheckTime);

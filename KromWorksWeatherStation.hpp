@@ -32,6 +32,7 @@ private:
 public:
     Weatherstation(BMP280 &BMP280, WeatherStationDisplay &display, hwlib::pin_in &button);
     void startUp();
+    void drawTempAndPress();
     void measurementWithInterval(uint8_t timeInMinutes);
     void drawChart();
 };

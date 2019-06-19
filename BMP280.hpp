@@ -23,7 +23,8 @@ private:
         int16_t dig_p8 = 0;
         int16_t dig_p9 = 0;
         int32_t t_fine = 0;
-        int8_t realTemp = 0;
+        int16_t realTempMS = 0;
+        int16_t realTempLS = 0;
         uint16_t realPress = 0;
     };
 
