@@ -30,7 +30,7 @@ private:
 
     struct precisionMode
     {
-        const uint8_t off = 00000001;
+        const uint8_t off = 0b00000001;
         const uint8_t oversampelingOneTime = 0b00100101;
         const uint8_t oversampelingTwoTimes = 0b01001001;
         const uint8_t oversampelingFourTimes = 0b01101101;
@@ -42,7 +42,7 @@ private:
 
 public:
 
-    enum adresses : const uint8_t
+    enum class register : const uint8_t //casten
     {
         resetAdress = 0xE0,
         idAdress = 0xD0,
