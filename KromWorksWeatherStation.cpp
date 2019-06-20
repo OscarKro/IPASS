@@ -1,10 +1,10 @@
 #include "KromWorksWeatherStation.hpp"
 
 //constructor from weatherstation. Requires a BMP280 object, an oled class display and a pin_in object
-Weatherstation::Weatherstation(BMP280 &BMP280, WeatherStationDisplay &display, hwlib::pin_in &button) : chip(BMP280), display(display), button(button) {}
+Weatherstation::Weatherstation(EnvironmentReader &BMP280, WeatherStationDisplay &display, hwlib::pin_in &button) : chip(BMP280), display(display), button(button) {}
 
 //function to push back the data from the chip into their respective data array
-void Weatherstation::WeatherstationData::pushBack(int8_t dataTemp, uint16_t dataPress)
+void Weatherstation::WeatherstationData::pushBack(int16_t dataTemp, uint32_t dataPress)
 {
     if (n < maxnMeas)
     {
@@ -35,16 +35,6 @@ void Weatherstation::WeatherstationData::wipeData()
         pressArray[i] = 0;
     }
 }
-//one complete measurementCycle (read temperature, read pressure, calculate both, and write it to screen).
-void Weatherstation::measurementCyle()
-{
-    chip.setMode(chip.returnModeStruct().oversampelingOneTime);
-    chip.readPTregisters();
-    chip.calculateTemp();
-    chip.calculatePress();
-    drawTempAndPress();
-    data.pushBack(chip.returnDataStruct().realTempMS, chip.returnDataStruct().realPress);
-}
 
 //standard startup routine for the chip, led screen and the button.
 //it resets, checks if the BMP280 are properly connected and starts the first read of all the registers
@@ -72,12 +62,12 @@ void Weatherstation::startUp()
     display.drawText("done!");
     display.flush();
     hwlib::wait_ms(500);
-    display.resetCursor(0, 1);
     display.clearScreen();
+    display.resetCursor(0, 1);
     display.drawText("connect\nchip");
     display.flush();
     hwlib::wait_ms(500);
-    if (chip.readId() == 1)
+    if (chip.readId() == 88)
     {
         display.clearScreen();
         display.resetCursor(0, 1);
@@ -122,19 +112,14 @@ void Weatherstation::startUp()
     display.drawText("reading\n");
     display.drawText("param...");
     display.flush();
-    chip.setMode(chip.returnModeStruct().oversampelingOneTime);
-    chip.readTempParam();
-    chip.readPressParam();
-    chip.readPTregisters();
-    chip.calculateTemp();
-    chip.calculatePress();
+    chip.readParam();
     display.clearScreen();
     display.resetCursor(0, 1);
-    display.drawText(" done!");
+    display.drawText("succes");
     display.flush();
     hwlib::wait_ms(500);
-    display.resetCursor(0, 1);
     display.clearScreen();
+    display.resetCursor(0, 1);
     display.drawText("welcome!");
     display.flush();
     hwlib::wait_ms(1000);
@@ -142,13 +127,18 @@ void Weatherstation::startUp()
 
 void Weatherstation::drawTempAndPress()
 {
+    auto temp = chip.readTemperature();
+    auto press = chip.readPressure();
+    int8_t tempMSB = temp / 100;
+    uint8_t tempLSB = temp - (temp / 100);
+    data.pushBack(temp, press);
     display.clearScreen();
     display.resetCursor(0, 1);
-    display.drawInt(chip.returnDataStruct().realTempMS);
+    display.drawInt(tempMSB);
     display.drawText(".");
-    display.drawInt(chip.returnDataStruct().realTempLS);
+    display.drawInt(tempLSB);
     display.drawText(" C\n");
-    display.drawInt(chip.returnDataStruct().realPress);
+    display.drawInt((uint16_t)(press / 100));
     display.drawText(" hPa");
     display.flush();
 }
@@ -166,7 +156,6 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
     {
         firstMeasurement = 0;
         drawTempAndPress();
-        data.pushBack(chip.returnDataStruct().realTempMS, chip.returnDataStruct().realPress);
     }
 
     while (true)
@@ -175,13 +164,20 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
         if (button.read())
         {
             drawChart();
-            display.flush();
             hwlib::wait_ms(buttonWaitTime);
             while (true)
             {
                 if (button.read())
                 {
-                    drawTempAndPress();
+                    display.clearScreen();
+                    display.resetCursor(0, 1);
+                    display.drawInt((int8_t)(data.tempArray[data.n - 1] / 100));
+                    display.drawText(".");
+                    display.drawInt((uint8_t)(data.tempArray[data.n - 1] - (data.tempArray[data.n - 1] / 100)));
+                    display.drawText(" C\n");
+                    display.drawInt((uint16_t)(data.pressArray[data.n - 1] / 100));
+                    display.drawText(" hPa");
+                    display.flush();
                     break;
                 }
                 hwlib::wait_ms(buttonCheckTime);
@@ -189,16 +185,17 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
         }
         else if (!firstMeasurement && measCounter == timeInterval)
         {
-            measurementCyle();
+            drawTempAndPress();
             return;
         }
         hwlib::wait_ms(buttonCheckTime);
     }
 }
+
 //function to write a chart to the oled screen using the temperature data from 30 minutes.
 void Weatherstation::drawChart()
 {
-    uint16_t xPoint = 4;
+    uint16_t xPoint = 0;
     display.clearScreen();
     hwlib::xy topLeftPoint(0, 0);
     hwlib::xy zeroDegreesPoint(127, 32);
@@ -208,13 +205,14 @@ void Weatherstation::drawChart()
     {
         if (i == 0)
         {
-            display.drawLine(hwlib::xy(topLeftPoint.x, zeroDegreesPoint.y - data.tempArray[i]), hwlib::xy(xPoint, zeroDegreesPoint.y - data.tempArray[i]));
+            display.drawLine(hwlib::xy(topLeftPoint.x, zeroDegreesPoint.y - (data.tempArray[i] / 100)), hwlib::xy(xPoint, zeroDegreesPoint.y - (data.tempArray[i] - 100)));
         }
         else
         {
-            display.drawLine(hwlib::xy(xPoint - 4, zeroDegreesPoint.y - data.tempArray[i - 1]), hwlib::xy(xPoint, zeroDegreesPoint.y -
-                                                                                                                      data.tempArray[i]));
+            display.drawLine(hwlib::xy(xPoint - 4, zeroDegreesPoint.y - (data.tempArray[i - 1] / 100)), hwlib::xy(xPoint, zeroDegreesPoint.y -
+                                                                                                                              (data.tempArray[i] / 100)));
         }
         xPoint += 4;
     }
+    display.flush();
 }

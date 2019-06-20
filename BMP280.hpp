@@ -1,8 +1,8 @@
 #ifndef BMP280_HPP
 #define BMP280_HPP
-#include "hwlib.hpp"
 #include "BoschBM.hpp"
-class BMP280 : public BoschBM
+#include "EnvironmentReader.hpp"
+class BMP280 : public EnvironmentReader, BoschBM
 {
 private:
 
@@ -23,76 +23,73 @@ private:
         int16_t dig_p8 = 0;
         int16_t dig_p9 = 0;
         int32_t t_fine = 0;
-        int16_t realTempMS = 0;
-        int16_t realTempLS = 0;
-        uint16_t realPress = 0;
-    };
-
-    struct precisionMode
-    {
-        const uint8_t off = 0b00000001;
-        const uint8_t oversampelingOneTime = 0b00100101;
-        const uint8_t oversampelingTwoTimes = 0b01001001;
-        const uint8_t oversampelingFourTimes = 0b01101101;
-        const uint8_t oversampelingEightTimes = 0b10010001;
     };
 
     BMPData data;
-    precisionMode mode;
+    bool paramRead = 0;
 
 public:
 
-    enum class register : const uint8_t //casten
+    enum class reg : const uint8_t
     {
-        resetAdress = 0xE0,
-        idAdress = 0xD0,
-        statusAdress = 0xF3,
-        ctrl_measAdress,
-        configAdress,
-        i2cAdress,
-        pressureAdress1,
-        pressureAdress2,
-        pressureAdress3,
-        tempAdress1,
-        tempAdress2,
-        tempAdress3,
+        resetRegister = 0xE0,
+        idRegister = 0xD0,
+        statusRegister = 0xF3,
+        ctrl_measRegister,
+        configRegister,
+        i2cRegister,
+        pressureRegister1,
+        pressureRegister2,
+        pressureRegister3,
+        tempRegister1,
+        tempRegister2,
+        tempRegister3,
 
-        dig_t1Adress1 = 0x88, //unsigned short
-        dig_t1Adress2,
-        dig_t2Adress1,
-        dig_t2Adress2,
-        dig_t3Adress1,
-        dig_t3Adress2,
-        dig_p1Adress1,
-        dig_p1Adress2,
-        dig_p2Adress1,
-        dig_p2Adress2,
-        dig_p3Adress1,
-        dig_p3Adress2,
-        dig_p4Adress1,
-        dig_p4Adress2,
-        dig_p5Adress1,
-        dig_p5Adress2,
-        dig_p6Adress1,
-        dig_p6Adress2,
-        dig_p7Adress1,
-        dig_p7Adress2,
-        dig_p8Adress1,
-        dig_p8Adress2,
-        dig_p9Adress1,
-        dig_p9Adress2,
+        dig_t1Register1 = 0x88,
+        dig_t1Register2,
+        dig_t2Register1,
+        dig_t2Register2,
+        dig_t3Register1,
+        dig_t3Register2,
+        dig_p1Register1,
+        dig_p1Register2,
+        dig_p2Register1,
+        dig_p2Register2,
+        dig_p3Register1,
+        dig_p3Register2,
+        dig_p4Register1,
+        dig_p4Register2,
+        dig_p5Register1,
+        dig_p5Register2,
+        dig_p6Register1,
+        dig_p6Register2,
+        dig_p7Register1,
+        dig_p7Register2,
+        dig_p8Register1,
+        dig_p8Register2,
+        dig_p9Register1,
+        dig_p9Register2
+    };
+
+    enum class precision : const uint8_t
+    {
+        off = 0b00000001,
+        oversampelingOneTime = 0b00100101,
+        oversampelingTwoTimes = 0b01001001,
+        oversampelingFourTimes = 0b01101101,
+        oversampelingEightTimes = 0b10010001
     };
 
     BMP280(hwlib::i2c_bus &bus);
-    void readPTregisters();
-    void readTempParam();
-    void readPressParam();
-    bool readId();
-    void setMode(const uint8_t mode);
+    int16_t readTemperature();
+    uint32_t readPressure();
+    void readParam();
     void reset();
-    void calculateTemp();
-    void calculatePress();
+    uint8_t readId();
+    void readPTregisters();
+    void setMode(const uint8_t mode);
+    int16_t calculateTemp();
+    uint32_t calculatePress();
     BMPData returnDataStruct();
-    precisionMode returnModeStruct();
 };
 #endif //BMP280_HPP

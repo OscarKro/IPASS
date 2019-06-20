@@ -20,6 +20,13 @@ void WeatherStationDisplay::drawInt(const int8_t x)
 {
     terminal << hwlib::dec << x;
 }
+
+//function to draw a single byte in dec to the screen
+void WeatherStationDisplay::drawInt(const uint8_t x)
+{
+    terminal << hwlib::dec << x;
+}
+
 //function to draw a int16_t to the screen
 void WeatherStationDisplay::drawInt(const int16_t x)
 {
@@ -28,12 +35,6 @@ void WeatherStationDisplay::drawInt(const int16_t x)
 
 //function to draw an unsigned int8_t to the screen 
 void WeatherStationDisplay::drawInt(const uint16_t x)
-{
-    terminal << hwlib::dec << x;
-}
-
-//function to draw a single byte in dec to the screen
-void WeatherStationDisplay::drawByte(const uint8_t x)
 {
     terminal << hwlib::dec << x;
 }

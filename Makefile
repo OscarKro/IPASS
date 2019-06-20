@@ -12,7 +12,7 @@
 SOURCES := WeatherStationDisplay.cpp BMP280.cpp KromWorksWeatherStation.cpp BoschBM.cpp
 
 # header files in this project
-HEADERS := WeatherStationDisplay.hpp BMP280.hpp KromWorksWeatherStation.hpp BoschBM.hpp
+HEADERS := WeatherStationDisplay.hpp BMP280.hpp KromWorksWeatherStation.hpp BoschBM.hpp EnvironmentReader.hpp
 
 # other places to look for files for this project
 SEARCH  := 

@@ -1,13 +1,13 @@
 #ifndef KROMWORKSWEATHERSTATION_HPP
 #define KROMWORKSWEATHERSTATION_HPP
 #include "hwlib.hpp"
-#include "BMP280.hpp"
+#include "EnvironmentReader.hpp"
 #include "WeatherStationDisplay.hpp"
 
 class Weatherstation
 {
 private:
-    BMP280 &chip;
+    EnvironmentReader &chip;
     WeatherStationDisplay &display;
     hwlib::pin_in &button;
     bool firstMeasurement = 1;
@@ -17,20 +17,50 @@ private:
     {
         uint8_t maxnMeas = 30;
         uint8_t n = 0;
-        int8_t tempArray[30] = {};
+        int16_t tempArray[30] = {};
         //test array voor de grafiek
-        //int8_t tempArray[30] = {5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10, 5, 10, 20, 24, -10};
-        uint16_t pressArray[30] = {};
-        void pushBack(int8_t dataTemp, uint16_t dataPress);
+        // int16_t tempArray[30] = {
+        //     -2000,
+        //     -2000,
+        //     -2000,
+        //     -3100,
+        //     -3100,
+        //     -3100,
+        //     -2000,
+        //     -2000,
+        //     -2000,
+        //     -1000,
+        //     -1000,
+        //     -1000,
+        //     0,
+        //     0,
+        //     0,
+        //     500,
+        //     500,
+        //     500,
+        //     1000,
+        //     1000,
+        //     1000,
+        //     2000,
+        //     2000,
+        //     2000,
+        //     3100,
+        //     3100,
+        //     3100,
+        //     2000,
+        //     2000,
+        //     2000
+        // };
+        uint32_t pressArray[30] = {};
+        void pushBack(int16_t dataTemp, uint32_t dataPress);
         void popBack();
         void wipeData();
     };
 
     WeatherstationData data;
-    void measurementCyle();
 
 public:
-    Weatherstation(BMP280 &BMP280, WeatherStationDisplay &display, hwlib::pin_in &button);
+    Weatherstation(EnvironmentReader &BMP280, WeatherStationDisplay &display, hwlib::pin_in &button);
     void startUp();
     void drawTempAndPress();
     void measurementWithInterval(uint8_t timeInMinutes);
