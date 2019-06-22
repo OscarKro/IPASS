@@ -1,7 +1,7 @@
 #include "KromWorksWeatherStation.hpp"
 
 //constructor from weatherstation. Requires a BMP280 object, an oled class display and a pin_in object
-Weatherstation::Weatherstation(EnvironmentReader &BMP280, WeatherStationDisplay &display, hwlib::pin_in &button) : chip(BMP280), display(display), button(button) {}
+Weatherstation::Weatherstation(EnvironmentReader &chip, WeatherStationDisplay &display, hwlib::pin_in &button) : chip(chip), display(display), button(button) {}
 
 //function to push back the data from the chip into their respective data array
 void Weatherstation::WeatherstationData::pushBack(int16_t dataTemp, uint32_t dataPress)
@@ -17,6 +17,7 @@ void Weatherstation::WeatherstationData::pushBack(int16_t dataTemp, uint32_t dat
         n = 0;
         tempArray[n] = dataTemp;
         pressArray[n] = dataPress;
+        n++;
     }
 }
 //function to wipe the last item in both the data arrays
@@ -67,7 +68,7 @@ void Weatherstation::startUp()
     display.drawText("connect\nchip");
     display.flush();
     hwlib::wait_ms(500);
-    if (chip.readId() == 88)
+    if (chip.readId() == id)
     {
         display.clearScreen();
         display.resetCursor(0, 1);
@@ -138,8 +139,11 @@ void Weatherstation::drawTempAndPress()
     display.drawText(".");
     display.drawInt(tempLSB);
     display.drawText(" C\n");
-    display.drawInt((uint16_t)(press / 100));
-    display.drawText(" hPa");
+    if (press > 0)
+    {
+        display.drawInt((uint16_t)(press / 100));
+        display.drawText(" hPa");
+    }
     display.flush();
 }
 //function to call one measurement cycle, with wait time in minutes(to be put in a while loop).
@@ -169,15 +173,7 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
             {
                 if (button.read())
                 {
-                    display.clearScreen();
-                    display.resetCursor(0, 1);
-                    display.drawInt((int8_t)(data.tempArray[data.n - 1] / 100));
-                    display.drawText(".");
-                    display.drawInt((uint8_t)(data.tempArray[data.n - 1] - (data.tempArray[data.n - 1] / 100)));
-                    display.drawText(" C\n");
-                    display.drawInt((uint16_t)(data.pressArray[data.n - 1] / 100));
-                    display.drawText(" hPa");
-                    display.flush();
+                    drawTempAndPress();
                     break;
                 }
                 hwlib::wait_ms(buttonCheckTime);

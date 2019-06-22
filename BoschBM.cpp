@@ -1,6 +1,5 @@
 #include "BoschBM.hpp"
 
-//constructor for a Bosch BM*X* object
 BoschBM::BoschBM(hwlib::i2c_bus &bus) : bus(bus) {}
 
 void BoschBM::selectRegister(const uint8_t slaveAdress, const uint8_t registerAdress)

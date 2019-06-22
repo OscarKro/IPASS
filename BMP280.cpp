@@ -17,10 +17,9 @@ uint32_t BMP280::readPressure()
   return p;
 }
 
-//function to read al the temperature and pressure trimming registers.
 void BMP280::readParam()
 {
-  if (paramRead == 0)
+  if (!paramRead)
   {
     paramRead = 1;
     uint8_t buffer[24];
@@ -66,20 +65,17 @@ void BMP280::readParam()
   }
 }
 
-//reset the chip and all the registers.
 void BMP280::reset()
 {
   writeSingleByte((uint8_t)BMP280::reg::i2cRegister, (uint8_t)BMP280::reg::resetRegister, 0xB6);
   hwlib::wait_ms(10);
 }
 
-//read the id of the chip (shoud be 88).
 uint8_t BMP280::readId()
 {
   return readSingleByte((uint8_t)BMP280::reg::i2cRegister, (uint8_t)BMP280::reg::idRegister);
 }
 
-//burst readout from the raw temp and pressure registers.
 void BMP280::readPTregisters()
 {
   uint8_t buffer[6];
@@ -100,7 +96,6 @@ void BMP280::readPTregisters()
   data.totalTempBin |= buffer[5];
 }
 
-//set the oversampling, measurement and filter modes on the chip.
 void BMP280::setMode(uint8_t mode)
 {
   const uint8_t config = 0b00000100; //pressure filter on
@@ -110,9 +105,6 @@ void BMP280::setMode(uint8_t mode)
   hwlib::wait_ms(10);
 }
 
-
-
-//calculate the real temperature in C.
 int16_t BMP280::calculateTemp()
 {
   int32_t var1, var2;
@@ -123,11 +115,8 @@ int16_t BMP280::calculateTemp()
   data.t_fine = var1 + var2;
   data.totalTempBin = 0;
   return ((data.t_fine * 5 + 128) >> 8);
-  //data.realTempMS = ((data.t_fine * 5 + 128) >> 8)/100;
-  //data.realTempLS = ((data.t_fine * 5 + 128) >> 8) - (data.realTempMS * 100);
 }
 
-//calculate the real pressure in hPa.
 uint32_t BMP280::calculatePress()
 {
   int32_t var1, var2;
@@ -158,7 +147,6 @@ uint32_t BMP280::calculatePress()
   return p;
 }
 
-//return the struct with all the data.
 BMP280::BMPData BMP280::returnDataStruct()
 {
   return data;
