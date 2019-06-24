@@ -25,7 +25,7 @@ public:
     /// \details
     /// This member function resets the cursor on the display to x and y given in the parameters. It uses functions from hwlib and an xy object from
     /// hwlib.
-    void resetCursor(uint8_t x, uint8_t y);
+    void resetCursor(const uint8_t x, const uint8_t y);
 
     /// \brief
     /// Function to clear the screen

@@ -192,7 +192,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Function to do a measurment with interval. </p>
-<p>This Function does a complete measurement and writes this to the display each "timeInMinutes". The parameter is the time you want to wait before the next measurement and display in minutes. This function also includes the use of the button. If you press the button, the <a class="el" href="class_weatherstation.html#aca9046fb2f4aa7f5b5435a814395648d" title="Function to draw a data chart. ">drawChart()</a> function is called and it will draw a chart to the screen. If you then press it again, it will do a new measurement and draw this to the screen. Therefore, this function (or rather the button) can also be used to force a measurement. If the function is showing the chart, it will not continue counting to the next measurement time. In other words, the function stops measuring untill the you pressed the button again in chart mode and return to normal mode. This function needs to be put in a while loop in the main. The function uses <a class="el" href="class_weatherstation.html#a3b353ec103bf660932da4dc6b82b4474" title="Function to draw temperature and pressure. ">drawTempAndPress()</a> and read() from hwlib. </p>
+<p>This Function does a complete measurement and writes this to the display each "timeInMinutes". The parameter is the time you want to wait before the next measurement and display in minutes. This function also includes the use of the button. If you press the button, the <a class="el" href="class_weatherstation.html#aca9046fb2f4aa7f5b5435a814395648d" title="Function to draw a data chart. ">drawChart()</a> function is called and it will draw a chart to the screen. If you then press it again, the function will retrieve the latest data from the data struct and show this on screen. If the function is showing the chart, it will not continue counting to the next measurement time. In other words, the function stops measuring untill the you pressed the button again in chart mode and return to normal mode. This function needs to be put in a while loop in the main. The function uses <a class="el" href="class_weatherstation.html#a3b353ec103bf660932da4dc6b82b4474" title="Function to draw temperature and pressure. ">drawTempAndPress()</a> and read() from hwlib. </p>
 
 </div>
 </div>
@@ -222,7 +222,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jun 22 2019 17:52:37 for KromWorks Weatherstation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 24 2019 12:04:49 for KromWorks Weatherstation by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

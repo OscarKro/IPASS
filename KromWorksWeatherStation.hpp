@@ -125,8 +125,8 @@ public:
     /// \details
     /// This Function does a complete measurement and writes this to the display each "timeInMinutes". The parameter is the time you want to wait before
     /// the next measurement and display in minutes. This function also includes the use of the button. If you press the button, the drawChart() function 
-    /// is called and it will draw a chart to the screen. If you then press it again, it will do a new measurement and draw this to the screen. Therefore, 
-    /// this function (or rather the button) can also be used to force a measurement. If the function is showing the chart, it will not continue counting
+    /// is called and it will draw a chart to the screen. If you then press it again, the function will retrieve the latest data from
+    /// the data struct and show this on screen. If the function is showing the chart, it will not continue counting
     /// to the next measurement time. In other words, the function stops measuring untill the you pressed the button again in chart mode and return
     /// to normal mode. This function needs to be put in a while loop in the main. The function uses drawTempAndPress() and read() from hwlib.
     void measurementWithInterval(uint8_t timeInMinutes);
