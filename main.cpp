@@ -20,6 +20,6 @@ int main(void)
     station.startUp();
     while (true)
     {
-        station.measurementWithInterval(1);
+        station.measurementWithInterval(0.2f);
     }
 }

@@ -203,7 +203,7 @@ void Weatherstation::measurementWithInterval(uint8_t timeInMinutes)
                 hwlib::wait_ms(buttonCheckTime);
             }
         }
-        else if (!firstMeasurement && measCounter == timeInterval)
+        else if (!firstMeasurement && measCounter >= timeInterval)
         {
             drawTempAndPress();
             return;
