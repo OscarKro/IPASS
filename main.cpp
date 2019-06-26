@@ -20,6 +20,8 @@ int main(void)
     station.startUp();
     while (true)
     {
-        station.measurementWithInterval(0.2f);
+        station.measurementWithInterval(1);
     }
+    //voor de presentatie
+    //station.drawChart();
 }
