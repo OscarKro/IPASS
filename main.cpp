@@ -13,7 +13,7 @@ int main(void)
 
     auto oled = hwlib::glcd_oled(mainBus);
     auto terminal = hwlib::terminal_from(oled, font);
-
+    auto sensor = BMP280(mainBus);
     auto oledDisplay = WeatherStationDisplay(oled, terminal);
     Weatherstation station(sensor, oledDisplay, button);
     hwlib::cout << sensor.readId();
