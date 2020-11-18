@@ -4,3 +4,7 @@
 *.elf
 *.ld
 *.map
+*.hex
+_cc_flags
+_cpp_flags
+_linker_flags
