@@ -6,8 +6,8 @@
 int main(void)
 {
     auto button = hwlib::target::pin_in(hwlib::target::pins::d5);
-    auto scl = hwlib::target::pin_oc(hwlib::target::pins::d14);
-    auto sda = hwlib::target::pin_oc(hwlib::target::pins::d15);
+    auto scl = hwlib::target::pin_oc(hwlib::target::pins::d11);
+    auto sda = hwlib::target::pin_oc(hwlib::target::pins::d14);
     auto font = hwlib::font_default_16x16();
     auto mainBus = hwlib::i2c_bus_bit_banged_scl_sda(scl, sda);
 

@@ -41,8 +41,8 @@ void Weatherstation::WeatherstationData::wipeData()
 void Weatherstation::startUp()
 {
     display.clearScreen();
-    display.resetCursor(0, 1);
-    display.drawText("KromWork\n");
+    display.resetCursor(0, 0);
+    display.drawText("OK\nSystem\nDevelopment\n");
     display.flush();
     hwlib::wait_ms(1000);
     display.clearScreen();
